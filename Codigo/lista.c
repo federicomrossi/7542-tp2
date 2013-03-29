@@ -1,7 +1,6 @@
 
 #include <stdio.h>
 #include <stdlib.h>
-#include <stdbool.h>
 #include "lista.h"
 
 
@@ -17,14 +16,12 @@ typedef struct _nodo_lista_t
 
 } nodo_lista_t;
 
-
 struct _lista_t
 {
 	nodo_lista_t* primero; // Puntero al primer elemento de la lista
 	nodo_lista_t* ultimo;  // Puntero al último elemento de la lista
 	size_t largo;          // Cantidad de elementos que tiene la lista
 };
-
 
 struct _lista_iter_t
 {
@@ -190,7 +187,7 @@ void lista_destruir(lista_t *lista, void destruir_dato(lista_dato_t))
 		nodo = lista->primero;
 		lista->primero = nodo->sig;
 		
-		// Si hay una función para destruir los datos la uso
+		// Si se especificó una función para destruir los datos, la usamos
 		if(destruir_dato) destruir_dato(nodo->dato);
 		free(nodo);
 	}
@@ -263,61 +260,3 @@ void lista_iter_destruir(lista_iter_t *iter)
 {
 	free(iter);
 }
-
-
-
-/* ******************************************************************
- *             PRIMITIVAS DE LISTAS JUNTO CON ITERADOR
- * *****************************************************************/
-
-// Inserta un dato en la lista a la izquierda de la posición en la que
-// se encuentra el iterador. Devuelve verdadero si se agregó el dato y 
-// falso en caso contrario.
-// Pre: la lista y el iterador fueron creados.
-// Post: el dato fue insertado a la izquierda de la posición en la que
-// se encontraba el iterador. El iterador no modifica su 
-// posicionamiento.
-bool lista_insertar(lista_t *lista, lista_iter_t *iter, const lista_dato_t dato)
-{
-	nodo_lista_t* nodo = (nodo_lista_t*) malloc(sizeof(nodo_lista_t));
-	if(! nodo) return false;
-	
-	nodo->dato = dato;
-	nodo->sig = iter->act;
-	
-	if(!iter->ant)
-		lista->primero = nodo;
-	else		
-		iter->ant->sig = nodo;
-	if(lista_iter_al_final(iter)) lista->ultimo = nodo;
-	iter->act = nodo;
-	
-	lista->largo++;
-	
-	return true;
-}
-
-// Elimina el elemento de la lista sobre el cual se encuentra
-// posicionado el iterador. Devuelve verdader si se borro correctamente
-// y falso en caso contrario.
-// Pre: la lista y el iterador fueron creados.
-// Post: dato contiene el valor de la posicion que se elimino. El itera
-// dor avanzó hacia el elemento siguiente de la lista.
-bool lista_borrar(lista_t *lista, lista_iter_t *iter, lista_dato_t *dato)
-{
-	if(lista_iter_al_final(iter)) return false;
-	
-	nodo_lista_t* nodo_act = iter->act;
-	*dato = nodo_act->dato;
-	
-	iter->act = nodo_act->sig;
-	
-	if(nodo_act == lista->primero) lista->primero = nodo_act->sig;
-	if(nodo_act == lista->ultimo) lista->ultimo = iter->ant;
-	if(iter->ant) iter->ant->sig = iter->act;
-	lista->largo--;
-		
-	free(nodo_act);
-	return true;
-}
-

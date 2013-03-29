@@ -1,16 +1,28 @@
+/* ******************************************************************
+ * ******************************************************************
+ * TAD COLA
+ * ..................................................................
+ * Implementación del TDA Cola, la cual consta de un conjunto de 
+ * primitivas básicas para su uso.
+ * La cola está planteada como una cola de punteros, pero puede manejar
+ * otros tipos de datos definiendo el tipo de datos en el código
+ * principal
+ *
+ * ******************************************************************
+ * ******************************************************************/
+
+
 #ifndef COLA_H
 #define COLA_H
 
 #include <stdbool.h>
 #include <stddef.h>
 
+
 /* ******************************************************************
  *                DEFINICION DE LOS TIPOS DE DATOS
  * *****************************************************************/
 
-/* La cola está planteada como una cola de punteros, pero puede manejar
- * otros tipos de datos definiendo el tipo de datos en el código
- * principal. */
 #ifndef COLA_DATO_T
 #define COLA_DATO_T
 typedef void* cola_dato_t;
@@ -18,12 +30,15 @@ typedef void* cola_dato_t;
 
 typedef struct _cola_t cola_t;
 
+
+
 /* ******************************************************************
  *                    PRIMITIVAS DE LA COLA
  * *****************************************************************/
 
 // Crea una cola.
-// POST: devuelve una nueva cola vacía.
+// POST: devuelve una nueva cola vacía o NULL si no se ha podido
+// llevar a cabo la creación de la misma.
 cola_t* cola_crear();
 
 // Destruye la cola.
@@ -31,8 +46,10 @@ cola_t* cola_crear();
 // POST: se eliminaron todos los elementos de la cola.
 void cola_destruir(cola_t *cola);
 
-// Devuelve verdadero o falso, según si la cola tiene o no elementos encolados.
+// Devuelve verdadero o falso según si la cola tiene o no elementos
+// encolados respectivamente.
 // PRE: la cola fue creada.
+// POST: devuelve True o False.
 bool cola_esta_vacia(const cola_t *cola);
 
 // Agrega un nuevo elemento a la cola. Devuelve falso en caso de error.
@@ -59,4 +76,4 @@ bool cola_ver_primero(const cola_t *cola, cola_dato_t *valor);
 // contiene un elemento menos, si la cola no estaba vacía.
 bool cola_desencolar(cola_t *cola, cola_dato_t *valor);
 
-#endif // COLA_H
+#endif

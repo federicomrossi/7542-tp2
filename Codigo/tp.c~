@@ -1,0 +1,10 @@
+#include <stdio.h>
+#include <stdlib.h>
+
+int main(void)
+{
+	int var = (int) malloc(sizeof(int));
+
+	free(var);
+	return 0;
+}

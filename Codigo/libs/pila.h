@@ -63,4 +63,4 @@ bool pila_ver_tope(const pila_t *pila, pila_dato_t *valor);
 // elemento menos, si la pila no estaba vacía.
 bool pila_desapilar(pila_t *pila, pila_dato_t *valor);
 
-#endif // PILA_H
+#endif
