@@ -1,5 +1,0 @@
-tp.o tp.deps : tp.c lista.h grafo.h
-
-lista.h:
-
-grafo.h:

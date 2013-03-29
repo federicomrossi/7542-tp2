@@ -1,5 +1,0 @@
-grafo.o grafo.deps : grafo.c grafo.h lista.h
-
-grafo.h:
-
-lista.h:
