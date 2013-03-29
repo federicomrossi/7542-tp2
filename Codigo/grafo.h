@@ -16,7 +16,7 @@
 
 #include <stdbool.h>
 #include <stddef.h>
-//#include "lista.h"
+
 
 
 
@@ -36,16 +36,6 @@ typedef struct _grafo_t grafo_t;
 /* *******************************************************************
  * INCLUSIÓN DE TAD's Y DEFINICIÓN DE LOS TIPOS DE DATOS DE LOS MISMOS
  * ******************************************************************/
-
-//#define LISTA_DATO_T
-//typedef grafo_vertice_t* lista_dato_t;
-
-//#define HASH_DATO_T
-//typedef grafo_vertice_t* hash_dato_t;
-
-
-//#include "librerias/lista.h"
-//#include "librerias/hash_abierto.h"
 
 
 
@@ -99,8 +89,8 @@ bool grafo_crear_arista(grafo_t *grafo, grafo_dato_t di,
 // POST: devuelve true si se llevó a cabo la acción exitosamente, y
 // false en caso contrario. De existir la arista previamente a su creación, 
 // también se devolverá false.
-//bool grafo_eliminar_arista(grafo_t *grafo, grafo_vertice_t *vi,
-//	grafo_vertice_t *vf);
+bool grafo_eliminar_arista(grafo_t *grafo, grafo_dato_t di, 
+	grafo_dato_t df);
 
 // Consulta el peso de la arista que une a dos vértices.
 // PRE: 'grafo' es un grafo existente; 'vi' es el vértice de partida; 'vf' es
@@ -123,7 +113,7 @@ int grafo_cantidad_vertices(grafo_t *grafo);
 // contrario.
 bool grafo_son_adyacentes(grafo_t *grafo, grafo_dato_t di, 
 	grafo_dato_t df);
-//
+
 // Devuelve los vértices de un grafo.
 // PRE: 'grafo' es un grafo existente.
 // POST: devuelve una lista con los vértices del grafo.

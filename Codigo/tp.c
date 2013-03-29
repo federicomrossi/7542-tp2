@@ -44,10 +44,18 @@ int main(void)
 
 
 	grafo_crear_arista(grafo, numero1, numero2, 5);
+	grafo_crear_arista(grafo, numero1, numero3, 8);
 	grafo_crear_arista(grafo, numero2, numero1, 7);
 	printf("\nArista: %d\n", grafo_obtener_peso_arista(grafo, numero1, numero2));
 
-	//grafo_eliminar_vertice(grafo, numero1);
+	//grafo_eliminar_vertice(grafo, numero2);
+
+	grafo_eliminar_arista(grafo, numero1, numero2);
+
+	printf("\nArista: %d\n", grafo_obtener_peso_arista(grafo, numero1, numero2));
+	printf("\nArista: %d\n", grafo_obtener_peso_arista(grafo, numero1, numero3));
+	printf("\nArista: %d\n", grafo_obtener_peso_arista(grafo, numero2, numero1));
+
 
 	if (grafo_son_adyacentes(grafo, numero2, numero1))
 		printf("Son adyacentes\n");
@@ -55,6 +63,7 @@ int main(void)
 		printf("No son adyacentes\n");
 
 	grafo_destruir(grafo);
+
 	free(numero1);
 	free(numero2);
 	free(numero3);

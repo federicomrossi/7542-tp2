@@ -118,7 +118,6 @@ arista_t* grafo_obtener_arista(grafo_t *grafo, grafo_dato_t di,
 }
 
 
-
 // Función de destrucción de una arista. 
 // Pre: la arista fue creada.
 // Post: se eliminó la arista.
@@ -244,6 +243,7 @@ bool grafo_eliminar_vertice(grafo_t *grafo, const grafo_dato_t dato)
 	// MALLLLLLL!!! puede que no se esté en el primer vértice!!!!!
 	grafo->primerVertice = vertice->siguienteVertice;
 	if(!grafo->primerVertice) grafo->ultimoVertice = NULL;
+	grafo->cantidadVertices--;
 
 	// Destruimos aristas asociadas a otros vértices que
 	// incluyan al vértice
@@ -333,8 +333,37 @@ bool grafo_crear_arista(grafo_t *grafo, grafo_dato_t di,
 // POST: devuelve true si se llevó a cabo la acción exitosamente, y
 // false en caso contrario. De existir la arista previamente a su creación, 
 // también se devolverá false.
-//bool grafo_eliminar_arista(grafo_t *grafo, grafo_vertice_t *vi,
-//	grafo_vertice_t *vf);
+bool grafo_eliminar_arista(grafo_t *grafo, grafo_dato_t di, 
+	grafo_dato_t df)
+{
+	// Obtenemos los vértices que contienen los datos
+	vertice_t *vi = grafo_obtener_vertice(grafo, di);
+	vertice_t *vf = grafo_obtener_vertice(grafo, df);
+	if((!vi) || (!vf) || (vi == vf)) return false;
+
+	// Iteramos sobre la lista de adyacentes del vértice inicial
+	// hasta encontrar la arista, y la eliminamos.
+	lista_iter_t* iter = lista_iter_crear(vi->listaDeAdyacencia);
+	arista_t* arista;
+
+	while(!lista_iter_al_final(iter))
+	{
+		lista_iter_ver_actual(iter, &arista);
+		
+		if(arista->verticeAdyacente == vf)
+		{
+			grafo_destruir_arista(arista);
+			lista_borrar(vi->listaDeAdyacencia, iter, &arista);
+			lista_iter_destruir(iter);
+			return true;
+		};
+
+		lista_iter_avanzar(iter);
+	}
+	
+	lista_iter_destruir(iter);
+	return false;
+}
 
 
 // Consulta el peso de la arista que une a dos vértices.

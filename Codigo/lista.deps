@@ -1,0 +1,3 @@
+lista.o lista.deps : lista.c lista.h
+
+lista.h:

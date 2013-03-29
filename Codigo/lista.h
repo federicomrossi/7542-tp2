@@ -123,4 +123,28 @@ bool lista_iter_al_final(const lista_iter_t *iter);
 void lista_iter_destruir(lista_iter_t *iter);
 
 
+
+
+/* ******************************************************************
+ *             PRIMITIVAS DE LISTAS JUNTO CON ITERADOR
+ * *****************************************************************/
+
+// Inserta un dato en la lista a la izquierda de la posición en la que
+// se encuentra el iterador. Devuelve verdadero si se agregó el dato y 
+// falso en caso contrario.
+// Pre: la lista y el iterador fueron creados.
+// Post: el dato fue insertado a la izquierda de la posición en la que
+// se encontraba el iterador. El iterador no modifica su 
+// posicionamiento.
+bool lista_insertar(lista_t *lista, lista_iter_t *iter, const lista_dato_t dato);
+
+// Elimina el elemento de la lista sobre el cual se encuentra
+// posicionado el iterador. Devuelve verdader si se borro correctamente
+// y falso en caso contrario.
+// Pre: la lista y el iterador fueron creados.
+// Post: dato contiene el valor de la posicion que se elimino. El itera
+// dor avanzó hacia el elemento siguiente de la lista.
+bool lista_borrar(lista_t *lista, lista_iter_t *iter, lista_dato_t *dato);
+
+
 #endif
