@@ -64,7 +64,7 @@ struct _vertice_t
 {
 	grafo_dato_t dato;
 	lista_t* listaDeAdyacencia;
-	vertice_t* siguienteVertice;
+	vertice_t* verticeSiguiente;
 };
 
 
@@ -83,12 +83,43 @@ vertice_t* grafo_obtener_vertice(grafo_t *grafo, const grafo_dato_t dato)
 	while(vertice)
 	{
 		if(vertice->dato == dato) return vertice;
-		vertice = vertice->siguienteVertice;
+		vertice = vertice->verticeSiguiente;
 	}
 
 	return NULL;
 }
 
+void grafo_desvincular_vertice(grafo_t* grafo, vertice_t *vertice)
+{
+	vertice_t* vTmp = grafo->primerVertice;
+	vertice_t* vAnteriorTmp = NULL;
+
+	while(vTmp)
+	{
+		// Verificamos si encontramos el vértice a eliminar
+		if(vTmp == vertice)
+		{
+			// Acción a realizar cuando el vértice es el primero
+			if(grafo->primerVertice == vertice)
+				grafo->primerVertice = vertice->verticeSiguiente;
+
+			// Acción a realizar cuando el vértice es el último
+			if(grafo->ultimoVertice == vertice)
+				grafo->ultimoVertice = vAnteriorTmp;
+
+			// Acción sobre el vértice anterior si existe
+			if(vAnteriorTmp)
+				vAnteriorTmp->verticeSiguiente = vTmp->verticeSiguiente;
+
+			grafo->cantidadVertices--;
+
+			return;
+		}
+
+		vAnteriorTmp = vTmp;
+		vTmp = vTmp->verticeSiguiente;
+	}
+}
 
 //
 arista_t* grafo_obtener_arista(grafo_t *grafo, grafo_dato_t di, 
@@ -121,9 +152,35 @@ arista_t* grafo_obtener_arista(grafo_t *grafo, grafo_dato_t di,
 // Función de destrucción de una arista. 
 // Pre: la arista fue creada.
 // Post: se eliminó la arista.
-void grafo_destruir_arista(arista_t* arista)
+void arista_funcion_de_destruccion(arista_t* arista)
 {
 	free(arista);
+}
+
+bool grafo_destruir_arista(vertice_t *vi, vertice_t *vf)
+{
+	// Iteramos sobre la lista de adyacentes del vértice inicial
+	// hasta encontrar la arista, y la eliminamos.
+	lista_iter_t* iter = lista_iter_crear(vi->listaDeAdyacencia);
+	arista_t* arista;
+
+	while(!lista_iter_al_final(iter))
+	{
+		lista_iter_ver_actual(iter, &arista);
+		
+		if(arista->verticeAdyacente == vf)
+		{
+			arista_funcion_de_destruccion(arista);
+			lista_borrar(vi->listaDeAdyacencia, iter, &arista);
+			lista_iter_destruir(iter);
+			return true;
+		};
+
+		lista_iter_avanzar(iter);
+	}
+	
+	lista_iter_destruir(iter);
+	return false;
 }
 
 
@@ -135,7 +192,7 @@ bool grafo_existe_vertice(grafo_t *grafo, const grafo_dato_t dato)
 	while(vertice)
 	{
 		if(vertice->dato == dato) return true;
-		vertice = vertice->siguienteVertice;
+		vertice = vertice->verticeSiguiente;
 	}
 
 	return false;
@@ -178,10 +235,10 @@ void grafo_destruir(grafo_t *grafo)
 
 	while(vertice)
 	{
-		vertice_tmp = vertice->siguienteVertice;
+		vertice_tmp = vertice->verticeSiguiente;
 		
 		// Destruimos aristas asociadas al vértice
-		lista_destruir(vertice->listaDeAdyacencia, grafo_destruir_arista);
+		lista_destruir(vertice->listaDeAdyacencia, arista_funcion_de_destruccion);
 		free(vertice);
 
 		vertice = vertice_tmp;
@@ -210,13 +267,13 @@ bool grafo_nuevo_vertice(grafo_t *grafo, const grafo_dato_t dato)
 	// Seteamos la información inicial del vértice
 	vertice->dato = dato;
 	vertice->listaDeAdyacencia = lista_crear();
-	vertice->siguienteVertice = NULL;
+	vertice->verticeSiguiente = NULL;
 
-	// Actualizamos la lista de vértices del grafo
+	// Vinculamos el vértice al grafo
 	if(!grafo->primerVertice)
 		grafo->primerVertice = vertice;
 	else
-		grafo->ultimoVertice->siguienteVertice = vertice;
+		grafo->ultimoVertice->verticeSiguiente = vertice;
 
 	grafo->ultimoVertice = vertice;
 	grafo->cantidadVertices++;
@@ -237,13 +294,10 @@ bool grafo_eliminar_vertice(grafo_t *grafo, const grafo_dato_t dato)
 	if(!vertice) return false;
 
 	// Destruimos aristas asociadas al vértice
-	lista_destruir(vertice->listaDeAdyacencia, grafo_destruir_arista);
+	lista_destruir(vertice->listaDeAdyacencia, arista_funcion_de_destruccion);
 
-	// Hacemos que el grafo deje de apuntar al vértice
-	// MALLLLLLL!!! puede que no se esté en el primer vértice!!!!!
-	grafo->primerVertice = vertice->siguienteVertice;
-	if(!grafo->primerVertice) grafo->ultimoVertice = NULL;
-	grafo->cantidadVertices--;
+	// Desvinculamos al vértice del grafo
+	grafo_desvincular_vertice(grafo, vertice);
 
 	// Destruimos aristas asociadas a otros vértices que
 	// incluyan al vértice
@@ -253,27 +307,9 @@ bool grafo_eliminar_vertice(grafo_t *grafo, const grafo_dato_t dato)
 	{
 		// Verificamos si existen aristas salientes del vértice
 		if(!lista_esta_vacia(vertice_tmp->listaDeAdyacencia))
-		{
-			// Iteramos sobre aristas del vértice
-			lista_iter_t* iter = lista_iter_crear(vertice_tmp->listaDeAdyacencia);
-			arista_t* arista;
+			grafo_destruir_arista(vertice_tmp, vertice);
 
-			while(!lista_iter_al_final(iter))
-			{
-				lista_iter_ver_actual(iter, &arista);
-				if(arista->verticeAdyacente == vertice)
-				{
-					// Como la arista es única, la destruimos y salimos
-					grafo_destruir_arista(arista);
-					break;
-				}
-				lista_iter_avanzar(iter);
-			}
-			
-			lista_iter_destruir(iter);
-		}
-
-		vertice_tmp = vertice_tmp->siguienteVertice;
+		vertice_tmp = vertice_tmp->verticeSiguiente;
 	}
 
 	// Destruimos el vértice
@@ -341,28 +377,7 @@ bool grafo_eliminar_arista(grafo_t *grafo, grafo_dato_t di,
 	vertice_t *vf = grafo_obtener_vertice(grafo, df);
 	if((!vi) || (!vf) || (vi == vf)) return false;
 
-	// Iteramos sobre la lista de adyacentes del vértice inicial
-	// hasta encontrar la arista, y la eliminamos.
-	lista_iter_t* iter = lista_iter_crear(vi->listaDeAdyacencia);
-	arista_t* arista;
-
-	while(!lista_iter_al_final(iter))
-	{
-		lista_iter_ver_actual(iter, &arista);
-		
-		if(arista->verticeAdyacente == vf)
-		{
-			grafo_destruir_arista(arista);
-			lista_borrar(vi->listaDeAdyacencia, iter, &arista);
-			lista_iter_destruir(iter);
-			return true;
-		};
-
-		lista_iter_avanzar(iter);
-	}
-	
-	lista_iter_destruir(iter);
-	return false;
+	return grafo_destruir_arista(vi, vf);
 }
 
 
@@ -404,6 +419,25 @@ bool grafo_son_adyacentes(grafo_t *grafo, grafo_dato_t di,
 
 
 // Devuelve los vértices de un grafo.
-// PRE: 'grafo' es un grafo existente.
-// POST: devuelve una lista con los vértices del grafo.
-//lista_t* grafo_obtener_vertices(grafo_t *grafo);
+// PRE: 'grafo' es un grafo existente; 'listaDeVertices' es un arreglo
+// del tamaño de la cantidad de vértices existente en el grafo al momento
+// de llamar a esta función (es el usuario el responsable de asegurarse
+// de cumplir con este requisito). 
+// POST: se almacenó en 'listaDeVertices' los datos de los vértices existentes.
+// Si no hay vértices, la lista será igual a NULL.
+void grafo_obtener_vertices(grafo_t *grafo, grafo_dato_t *listaDeVertices)
+{
+	// Verificamos si hay vértices en el grafo
+	if(!grafo->cantidadVertices) 
+	{
+		listaDeVertices = NULL;
+		return;
+	}	
+
+	// Almacenamos los datos de los vértices en la lista de vértices
+	vertice_t *v;
+	int i = 0;
+
+	for(v = grafo->primerVertice; v; v = v->verticeSiguiente)
+		listaDeVertices[i++] = v->dato;
+}

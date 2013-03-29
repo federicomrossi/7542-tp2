@@ -42,25 +42,50 @@ int main(void)
 	grafo_nuevo_vertice(grafo, numero4);
 	printf("Vertices: %d\n", grafo_cantidad_vertices(grafo));
 
+	grafo_dato_t lv[grafo_cantidad_vertices(grafo)];
 
-	grafo_crear_arista(grafo, numero1, numero2, 5);
-	grafo_crear_arista(grafo, numero1, numero3, 8);
-	grafo_crear_arista(grafo, numero2, numero1, 7);
-	printf("\nArista: %d\n", grafo_obtener_peso_arista(grafo, numero1, numero2));
+	grafo_obtener_vertices(grafo, lv);
 
-	//grafo_eliminar_vertice(grafo, numero2);
+	printf("Len LV: %d\n\n", sizeof(lv)/sizeof(grafo_dato_t));
+	
+	int i;
+	
+	for(i=0; i < grafo_cantidad_vertices(grafo); i++ )
+	{
+		printf("Dato %d: %d\n", i+1, lv[i]->entero);
+		if(lv[i]==numero1) printf("coincidio con numero1\n");
+	}
 
-	grafo_eliminar_arista(grafo, numero1, numero2);
 
-	printf("\nArista: %d\n", grafo_obtener_peso_arista(grafo, numero1, numero2));
-	printf("\nArista: %d\n", grafo_obtener_peso_arista(grafo, numero1, numero3));
-	printf("\nArista: %d\n", grafo_obtener_peso_arista(grafo, numero2, numero1));
+	// grafo_crear_arista(grafo, numero1, numero2, 5);
+	// grafo_crear_arista(grafo, numero1, numero3, 8);
+	// grafo_crear_arista(grafo, numero2, numero1, 7);
+	// printf("\nArista: %d\n", grafo_obtener_peso_arista(grafo, numero1, numero2));
+	
+	// grafo_eliminar_arista(grafo, numero1, numero2);
+	// grafo_eliminar_arista(grafo, numero1, numero3);
+	// grafo_eliminar_arista(grafo, numero2, numero1);
+
+	
+	// grafo_eliminar_vertice(grafo, numero1);
+	// printf("Vertices: %d\n", grafo_cantidad_vertices(grafo));
+	// grafo_eliminar_vertice(grafo, numero2);
+	// printf("Vertices: %d\n", grafo_cantidad_vertices(grafo));
+	// grafo_eliminar_vertice(grafo, numero3);
+	// printf("Vertices: %d\n", grafo_cantidad_vertices(grafo));
+	// grafo_eliminar_vertice(grafo, numero4);
+	// printf("Vertices: %d\n", grafo_cantidad_vertices(grafo));
 
 
-	if (grafo_son_adyacentes(grafo, numero2, numero1))
-		printf("Son adyacentes\n");
-	else
-		printf("No son adyacentes\n");
+	// printf("\nArista: %d\n", grafo_obtener_peso_arista(grafo, numero1, numero2));
+	// printf("\nArista: %d\n", grafo_obtener_peso_arista(grafo, numero1, numero3));
+	// printf("\nArista: %d\n", grafo_obtener_peso_arista(grafo, numero2, numero1));
+
+
+	// if (grafo_son_adyacentes(grafo, numero2, numero1))
+	// 	printf("Son adyacentes\n");
+	// else
+	// 	printf("No son adyacentes\n");
 
 	grafo_destruir(grafo);
 

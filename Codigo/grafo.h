@@ -117,7 +117,7 @@ bool grafo_son_adyacentes(grafo_t *grafo, grafo_dato_t di,
 // Devuelve los vértices de un grafo.
 // PRE: 'grafo' es un grafo existente.
 // POST: devuelve una lista con los vértices del grafo.
-//lista_t* grafo_obtener_vertices(grafo_t *grafo);
+void grafo_obtener_vertices(grafo_t *grafo, grafo_dato_t *listaDeVertices);
 
 
 #endif
