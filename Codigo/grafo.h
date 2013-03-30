@@ -15,7 +15,6 @@
 #define GRAFO_H
 
 #include <stdbool.h>
-#include <stddef.h>
 
 
 
@@ -24,9 +23,13 @@
  * *****************************************************************/
 
 #ifndef GRAFO_DATO_T
+// Para especificar el tipo de datos que manejará el grafo, copie
+// las siguientes dos líneas en su código, justo antes de incluir
+// el presente header. Reemplace void* por el tipo que usted prefiera.
 #define GRAFO_DATO_T
 typedef void* grafo_dato_t;
 #endif
+
 
 typedef struct _grafo_t grafo_t;
 

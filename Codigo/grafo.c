@@ -38,7 +38,7 @@ typedef arista_t* lista_dato_t;
 
 
 /* ******************************************************************
- * DEFINICION DE LOS TIPOS DE DATOS
+ * DEFINICIÓN DE LOS TIPOS DE DATOS
  * *****************************************************************/
 
 // Tipo que representa a un grafo.

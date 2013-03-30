@@ -1,3 +1,14 @@
+/* ******************************************************************
+ * ******************************************************************
+ * TAD LISTA ENLAZADA
+ * ..................................................................
+ *
+ * Implementación de una lista simplemente enlazada, incluyendo como 
+ * primitivas a las operaciones básicas de estas.
+ *
+ * ******************************************************************
+ * ******************************************************************/
+
 
 #include <stdio.h>
 #include <stdlib.h>
@@ -6,16 +17,18 @@
 
 
 /* ******************************************************************
- *                DEFINICION DE LOS TIPOS DE DATOS
+ * DEFINICIÓN DE LOS TIPOS DE DATOS
  * *****************************************************************/
 
+// Tipo que representa a un nodo de la lista
 typedef struct _nodo_lista_t
 {
 	lista_dato_t dato;			// Dato que almacena el nodo.
-	struct _nodo_lista_t* sig;	// Puntero hacia el nodo siguiente.
+	struct _nodo_lista_t* sig;	// Puntero al nodo siguiente.
 
 } nodo_lista_t;
 
+// Tipo que representa a una lista
 struct _lista_t
 {
 	nodo_lista_t* primero; // Puntero al primer elemento de la lista
@@ -23,27 +36,45 @@ struct _lista_t
 	size_t largo;          // Cantidad de elementos que tiene la lista
 };
 
+// Tipo que representa a un iterador de la lista 
 struct _lista_iter_t
 {
-	nodo_lista_t* ant;		// Puntero al elemento anterior del iterador
 	nodo_lista_t* act;		// Puntero a la posición actual del iterador
+	nodo_lista_t* ant;		// Puntero al elemento anterior del iterador
 };
 
 
 
+/* ******************************************************************
+ * FUNCIONES AUXILIARES
+ * *****************************************************************/
+
+// Función que crea un nodo.
+// POST: se devuelve un puntero al nodo o NULL si no se ha podido 
+// llevar a cabo la creación del mismo.
+nodo_lista_t* lista_crear_nodo()
+{
+	nodo_lista_t* nodo = (nodo_lista_t*) malloc(sizeof(nodo_lista_t));
+	if(!nodo) return NULL;
+	return nodo;
+}
+
+
 
 /* ******************************************************************
- *                  	 PRIMITIVAS BÁSICAS
+ * PRIMITIVAS BÁSICAS
  * *****************************************************************/
 
 // Crea una lista enlazada.
-// Post: Devuelve un puntero a una lista vacía.
+// POST: Devuelve un puntero a una lista vacía o NULL si no se ha 
+// podido llevar a cabo la creación del mismo.
 lista_t* lista_crear()
 {
+	// Solicitamos espacio en memoria para la lista
 	lista_t* lista = (lista_t*) malloc(sizeof(lista_t));
-	
 	if(! lista) return NULL;
 
+	// Seteamos parámetros iniciales de la lista
 	lista->primero = NULL;
 	lista->ultimo = NULL;
 	lista->largo = 0;
@@ -51,29 +82,34 @@ lista_t* lista_crear()
 	return lista;
 }
 
-// Devuelve verdadero si la lista esta vacía o falso si tiene elementos.
-// Pre: la lista fue creada.
+// Verifica si una lista se encuentra vacía.
+// PRE: 'lista' es una lista existente.
+// POST: Devuelve verdadero si la lista se encuentra vacía o falso en 
+// si tiene elementos.
 bool lista_esta_vacia(const lista_t *lista)
 {
-	return lista->largo == 0;
+	return (lista->largo == 0);
 }
 
 // Devuelve el largo de la lista.
-// Pre: La lista fue creada.
+// PRE: 'lista' es una lista existente.
 size_t lista_largo(const lista_t *lista)
 {
 	return lista->largo;
 }
 
-// Inserta el elemento al principio de la lista. Devuelve falso en
-// caso de error.
-// Pre: La lista fue creada.
-// Post: Se agregó un nuevo elemento, en la pimera posición de la lista.
+// Inserta un elemento al principio de la lista.
+// PRE: 'lista' es una lista existente; 'dato' es el elemento a 
+// insertar.
+// POST: devuelve true si se realizó la acción con éxito o falso en
+// caso contrario.
 bool lista_insertar_primero(lista_t *lista, const lista_dato_t dato)
 {
-	nodo_lista_t* nodo = (nodo_lista_t*) malloc(sizeof(nodo_lista_t));
+	// Creamos un nuevo nodo
+	nodo_lista_t* nodo = lista_crear_nodo();
 	if(! nodo) return false;
 	
+	// Seteamos los campos del nodo
 	nodo->dato = dato;
 	nodo->sig = lista->primero;
 	lista->primero = nodo;
@@ -85,37 +121,41 @@ bool lista_insertar_primero(lista_t *lista, const lista_dato_t dato)
 	return true;
 }
 
-// Inserta el elemento al final de la lista. Devuelve falso en caso de 
-// error.
-// Pre: La lista fue creada.
-// Post: Se agregó un nuevo elemento, en la última posición de la lista.
+// Inserta un elemento al final de la lista.
+// PRE: 'lista' es una lista existente; 'dato' es el elemento a 
+// insertar.
+// POST: devuelve true si se realizó la acción con éxito o falso en
+// caso contrario.
 bool lista_insertar_ultimo(lista_t *lista, const lista_dato_t dato)
 {
-	nodo_lista_t* nodo = (nodo_lista_t*) malloc(sizeof(nodo_lista_t));
+	// Creamos un nuevo nodo
+	nodo_lista_t* nodo = lista_crear_nodo();
 	if(! nodo) return false;
 	
+	// Seteamos los campos del nodo
 	nodo->dato = dato;
 	nodo->sig = NULL;
 	
-	//Si no hay elementos, el último también es el primero
+	// Si no hay elementos, el último también es el primero
 	if(! lista->ultimo)
 		lista->primero = nodo;
-	//Si hay, pongo el nuevo nodo a continuación del que estaba último
+	// Sino, insertamos el nuevo nodo a continuación del que 
+	// se encontraba último
 	else
 		lista->ultimo->sig = nodo;
+
 	lista->ultimo = nodo;
 	lista->largo++;
 	
 	return true;
 }
 
-// Obtiene el primer elemento de la lista. Si la lista tiene
-// elementos, el primero se copia en *dato y devuelve verdadero.
-// Si está vacía devuelve falso.
-// Pre: la lista fue creada, dato es un dirección de memoria válida 
-// donde se puede escribir.
-// Post: dato contiene el primer elemento de la lista, cuando
-// ésta no está vacía.
+// Obtiene el primer elemento de la lista.
+// PRE: 'lista' es una lista existente; 'dato' es un puntero a
+// la variable que recibirá el dato.
+// POST: si la lista posee elementos, se asocia el primero de esta
+// con 'dato' y se devuelve verdadero. Si se encuentra vacía se
+// devuelve falso.
 bool lista_ver_primero(const lista_t *lista, lista_dato_t *dato)
 {
 	if (lista->largo == 0) return false;
@@ -125,13 +165,12 @@ bool lista_ver_primero(const lista_t *lista, lista_dato_t *dato)
 	return true;
 }
 
-// Obtiene el último elemento de la lista. Si la lista tiene
-// elementos, el último se copia en *dato y devuelve verdadero.
-// Si está vacía devuelve falso.
-// Pre: la lista fue creada, dato es un dirección de memoria válida 
-// donde se puede escribir.
-// Post: dato contiene el último elemento de la lista, cuando
-// ésta no está vacía.
+// Obtiene el último elemento de la lista.
+// PRE: 'lista' es una lista existente; 'dato' es un puntero a
+// la variable que recibirá el dato.
+// POST: si la lista posee elementos, se asocia el último de esta
+// con 'dato' y se devuelve verdadero. Si se encuentra vacía se
+// devuelve falso.
 bool lista_ver_ultimo(const lista_t *lista, lista_dato_t *dato)
 {
 	if (lista->largo == 0) return false;
@@ -141,53 +180,50 @@ bool lista_ver_ultimo(const lista_t *lista, lista_dato_t *dato)
 	return true;
 }
 
-// Saca el primer elemento de la lista. Si ésta tiene elementos, se 
-// quita el primero, se copia en *dato y devuelve verdadero. Si la lista 
-// está vacía, devuelve falso.
-// Pre: la lista fue creada, dato es un dirección de memoria válida 
-// donde se puede escribir.
-// Post: Si la lista no estaba vacía, dato contiene el primer elemento, 
-// y éste se quita de la lista. El elemento que le sigue pasa a ser el
-//primero
+// Borra el primer elemento de la lista. 
+// PRE: 'lista' es una lista existente; 'dato' es un puntero a
+// la variable que recibirá el dato.
+// POST: si la lista tiene elementos, se quita el primero, se copia 
+// en 'dato' y se devuelve verdadero. Si la lista está vacía, devuelve 
+// falso.
 bool lista_borrar_primero(lista_t *lista, lista_dato_t *dato)
 {
 	if (lista->largo == 0) return false;
 	
-	// Tomamos el nodo a borrar y guardamos en *dato el dato de este.
+	// Tomamos el nodo a borrar y apuntamos 'dato' al dato del nodo.
 	nodo_lista_t* nodo_borrar = lista->primero;
 	*dato = lista->primero->dato;
 	
-	// El segundo elemento pasa a ser el primero y se decrementa 
-	// el largo de la lista.
+	// El segundo elemento pasa a ser el primero
 	lista->primero = lista->primero->sig;
 	lista->largo--;
 	
 	// Liberamos la memoria usada por el nodo.
 	free(nodo_borrar);
 	
-	// Si no quedan mas elementos en la lista, ultimo ya no debe apuntar
-	// a ninguna posición de memoria.
+	// Verificamos si quedan mas elementos en la lista
 	if (lista->largo == 0) lista->ultimo = NULL;	
 	
 	return true;
 }
 
-// Destruye la lista. El parámetro destruir_dato es una función que se
-// encarga de destruir los datos. En caso de que los datos no necesiten
-// ser destruidos se pasa NULL, caso contrario se pasa free o una
-// función que se encargue de destruir los datos.
-// Pre: la lista fue creada.
-// Post: se eliminaron la lista y todos sus elementos.
+// Destruye la lista enlazada. El parámetro 
+// PRE: 'lista' es una lista existente; 'destruir_dato' es una función
+// que se encarga de destruir los datos (e.g.: free()). En caso de que 
+// los datos no necesiten ser destruidos se debe pasar NULL.
+// POST: se eliminó la lista y todos sus elementos.
 void lista_destruir(lista_t *lista, void destruir_dato(lista_dato_t))
 {
 	nodo_lista_t* nodo;
 	
+	// Recorremos los nodos y los destruimos
 	while(lista->primero)
 	{
 		nodo = lista->primero;
 		lista->primero = nodo->sig;
 		
-		// Si se especificó una función para destruir los datos, la usamos
+		// Si se especificó una función para destruir los datos, 
+		// la usamos
 		if(destruir_dato) destruir_dato(nodo->dato);
 		free(nodo);
 	}
@@ -198,27 +234,30 @@ void lista_destruir(lista_t *lista, void destruir_dato(lista_dato_t))
 
 
 /* ******************************************************************
- *                     PRIMITIVAS DE ITERACIÓN
+ * PRIMITIVAS DE ITERACIÓN
  * *****************************************************************/
 
 // Crea un iterador para una lista.
-// Pre: la lista fue creada.
-// Post: devuelve un iterador nuevo.
+// PRE: 'lista' es una lista existente;
+// POST: se devuelve un iterador nuevo o NULL si no se ha podido 
+// llevar a cabo la creación del mismo.
 lista_iter_t* lista_iter_crear(const lista_t* lista)
 {
+	// Solicitamos espacio en memoria para el iterador
 	lista_iter_t* iter = (lista_iter_t*) malloc(sizeof(lista_iter_t));
 	if(! iter) return NULL;
 
+	// Seteamos parámetros iniciales del iterador
 	iter->ant = NULL;
 	iter->act = lista->primero;
 
 	return iter;
 }
 
-// Avanza sobre la lista. Devuelve verdadero si avanzó.
-// Pre: El iterador fue creado.
-// Post: Se avanzó sobre la lista, devuelve verdadero. En caso contrario
-// devuelve falso.
+// Avanza sobre la lista.
+// PRE: 'iter' es un iterador existente
+// POST: se devuelve true si se avanzó sobre la lista o false en caso
+// contrario.
 bool lista_iter_avanzar(lista_iter_t *iter)
 {
 	if (!iter->act) return false;
@@ -229,14 +268,12 @@ bool lista_iter_avanzar(lista_iter_t *iter)
 	return true;	
 }
 
-// Obtiene el valor del dato de la posición donde se encuentra el  
-// iterador. Si la lista tiene elementos, el valor correspondiente a esa 
-// posición se copia en *dato y devuelve verdadero. En caso contrario
-// se devuelve falso.
-// Pre: el iterador fue creado, dato es un dirección de memoria válida 
-// donde se puede escribir.
-// Post: dato contiene el valor de la posición en la que se encuentra el
-// iterador.
+// Obtiene el dato de la posición actual del iterador.
+// PRE: 'iter' es un iterador existente; 'dato' es un puntero a la
+// variable que recibirá el dato.
+// POST: si la lista posee elementos, se asocia el dato de la posición
+// actual del iterador con 'dato' y se devuelve verdadero. En caso
+// contrario se devuelve false.
 bool lista_iter_ver_actual(const lista_iter_t *iter, lista_dato_t *dato)
 {
 	if (iter->act == NULL) return false;
@@ -246,16 +283,17 @@ bool lista_iter_ver_actual(const lista_iter_t *iter, lista_dato_t *dato)
 	return true;
 }
 
-// Devuelve verdadero o falso, según si el iterador llego al final de 
-// la lista o no.
-// Pre: el iterador fue creado.
+// Verifica si el iterador llegó al final de la lista.
+// PRE: 'iter' es un iterador existente.
+// POST: se devuelve true si el iterador llegó al final de la lista o
+// false en caso contrario
 bool lista_iter_al_final(const lista_iter_t *iter)
 {
 	return !iter->act;
 }
 
 // Destruye el iterador.
-// Pre: el iterador fue creado.
+// PRE: 'iter' es un iterador existente.
 void lista_iter_destruir(lista_iter_t *iter)
 {
 	free(iter);
@@ -263,26 +301,28 @@ void lista_iter_destruir(lista_iter_t *iter)
 
 
 
-
 /* ******************************************************************
- *             PRIMITIVAS DE LISTAS JUNTO CON ITERADOR
+ * PRIMITIVAS DE LA LISTA PARA EL ITERADOR
  * *****************************************************************/
 
 // Inserta un dato en la lista a la izquierda de la posición en la que
-// se encuentra el iterador. Devuelve verdadero si se agregó el dato y 
-// falso en caso contrario.
-// Pre: la lista y el iterador fueron creados.
-// Post: el dato fue insertado a la izquierda de la posición en la que
-// se encontraba el iterador. El iterador no modifica su 
-// posicionamiento.
-bool lista_insertar(lista_t *lista, lista_iter_t *iter, const lista_dato_t dato)
+// se encuentra el iterador.
+// PRE: 'lista' es una lista existente; 'iter' es un iterador existente
+// y perteneciente a 'lista'; 'dato' es el elemento a insertar.
+// POST: devuelve true si se realizó la acción con éxito o falso en
+// caso contrario. El iterador no modifica su posicionamiento.
+bool lista_insertar(lista_t *lista, lista_iter_t *iter, 
+	const lista_dato_t dato)
 {
-	nodo_lista_t* nodo = (nodo_lista_t*) malloc(sizeof(nodo_lista_t));
+	// Creamos un nuevo nodo
+	nodo_lista_t* nodo = lista_crear_nodo();
 	if(! nodo) return false;
 	
+	// Seteamos los campos del nodo
 	nodo->dato = dato;
 	nodo->sig = iter->act;
 	
+	// Ubicamos el nodo
 	if(!iter->ant)
 		lista->primero = nodo;
 	else		
@@ -295,26 +335,32 @@ bool lista_insertar(lista_t *lista, lista_iter_t *iter, const lista_dato_t dato)
 	return true;
 }
 
-// Elimina el elemento de la lista sobre el cual se encuentra
-// posicionado el iterador. Devuelve verdader si se borro correctamente
-// y falso en caso contrario.
-// Pre: la lista y el iterador fueron creados.
-// Post: dato contiene el valor de la posicion que se elimino. El itera
-// dor avanzó hacia el elemento siguiente de la lista.
+// Elimina el elemento de la lista sobre el cual se encuentra posicionado 
+// el iterador.
+// PRE: 'lista' es una lista existente; 'iter' es un iterador existente
+// y perteneciente a 'lista'; 'dato' es un puntero a la variable que 
+// recibirá el dato.
+// POST: 'dato' contiene el dato de la posición que se eliminó. El itera
+// dor avanzó hacia el siguiente elemento de la lista. En caso de ser
+// exitosa la acción se devuelve true o false en caso contrario.
 bool lista_borrar(lista_t *lista, lista_iter_t *iter, lista_dato_t *dato)
 {
+	// Verificamos si el iterador se encuentra al final de la lista
 	if(lista_iter_al_final(iter)) return false;
 	
+	// Enviamos el dato a la variable de salida 'dato'
 	nodo_lista_t* nodo_act = iter->act;
 	*dato = nodo_act->dato;
 	
+	// Movemos el iterador al siguiente elemento
 	iter->act = nodo_act->sig;
 	
+	// Desvinculamos el nodo y lo liberamos
 	if(nodo_act == lista->primero) lista->primero = nodo_act->sig;
 	if(nodo_act == lista->ultimo) lista->ultimo = iter->ant;
 	if(iter->ant) iter->ant->sig = iter->act;
 	lista->largo--;
-		
+	
 	free(nodo_act);
 	return true;
 }
