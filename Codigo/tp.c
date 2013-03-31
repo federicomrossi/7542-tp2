@@ -1,99 +1,63 @@
+/* ******************************************************************
+ * PROGRAMA CALCULADOR DE ROUTEO ENTRE PC's
+ * ******************************************************************
+ * 
+ * Facultad de Ingeniería - UBA
+ * 75.42 Taller de Programación I
+ * Trabajo Práctico N°2
+ * 
+ * ALUMNO: Federico Martín Rossi
+ * PADRÓN: 92086
+ * EMAIL: federicomrossi@gmail.com
+ *
+ * ******************************************************************
+ *
+ * [ REVISARRRRRRR!!!!! ] Programa que se encarga de procesar un 
+ * archivo con el listado de interrupciones de servicio eléctrico y 
+ * calcula la multa que debe ser aplicada a cada cliente, enviandose 
+ * estas a la salida estandar del sistema con el formato 
+ * [número_cliente]:[multa].
+ *
+ * FORMA DE USO
+ * ============
+ * 
+ * El programa se ejecuta del siguiente modo:
+ *
+ *		# ./tp [archivo]
+ *
+ * donde,
+ *
+ *		archivo: nombre de archivo (incluyendo su extensión) donde 
+ *				 se registran las interrupciones y el cliente al 
+ *				 que pertenece cada una de estas;
+ * 
+ * NOTA: El archivo de interrupciones debe seguir de manera estricta 
+ * el siguiente formato:
+ *
+ *		[número_de_cliente]:[consumo_típico]:[duración_interrupción]
+ */
+
+
 #include <stdio.h>
 #include <stdlib.h>
-#include "lista.h"
-
-typedef struct _nuevo_int {
-	int entero;
-} nuevo_int;
-
-#define GRAFO_DATO_T
-typedef nuevo_int* grafo_dato_t;
-#include "grafo.h"
+#include <string.h>
+ 
+#include "router.h"
 
 
 
+/* ******************************************************************
+ * PROGRAMA PRINCIPAL
+ * *****************************************************************/
 
-int main(void)
-{
-	grafo_t *grafo = grafo_crear();
-
-	nuevo_int *numero1 = (nuevo_int*) malloc(sizeof(nuevo_int));
-	numero1->entero = 4;
-
-	nuevo_int *numero2 = (nuevo_int*) malloc(sizeof(nuevo_int));
-	numero2->entero = 5;
-
-	nuevo_int *numero3 = (nuevo_int*) malloc(sizeof(nuevo_int));
-	numero3->entero = 5;
-
-	nuevo_int *numero4 = (nuevo_int*) malloc(sizeof(nuevo_int));
-	numero4->entero = 7;
-
-	grafo_nuevo_vertice(grafo, numero1);
-	printf("Vertices: %d\n", grafo_cantidad_vertices(grafo));
-	grafo_nuevo_vertice(grafo, numero1);
-	printf("Vertices: %d\n", grafo_cantidad_vertices(grafo));
-	grafo_nuevo_vertice(grafo, numero2);
-	printf("Vertices: %d\n", grafo_cantidad_vertices(grafo));
-	grafo_nuevo_vertice(grafo, numero3);
-	printf("Vertices: %d\n", grafo_cantidad_vertices(grafo));
-	grafo_nuevo_vertice(grafo, numero2);
-	printf("Vertices: %d\n", grafo_cantidad_vertices(grafo));
-	grafo_nuevo_vertice(grafo, numero4);
-	printf("Vertices: %d\n", grafo_cantidad_vertices(grafo));
-
-	grafo_dato_t lv[grafo_cantidad_vertices(grafo)];
-
-	grafo_obtener_vertices(grafo, lv);
-
-	printf("Len LV: %d\n\n", sizeof(lv)/sizeof(grafo_dato_t));
+int main(int argc, char **argv) {
 	
-	int i;
+	// Toma de parámetros
+	char *archivo = NULL;
+	if(argv[1]) archivo = argv[1];
 	
-	for(i=0; i < grafo_cantidad_vertices(grafo); i++ )
-	{
-		printf("Dato %d: %d\n", i+1, lv[i]->entero);
-		if(lv[i]==numero1) printf("coincidio con numero1\n");
-	}
-
-
-	// grafo_crear_arista(grafo, numero1, numero2, 5);
-	// grafo_crear_arista(grafo, numero1, numero3, 8);
-	// grafo_crear_arista(grafo, numero2, numero1, 7);
-	// printf("\nArista: %d\n", grafo_obtener_peso_arista(grafo, numero1, numero2));
-	
-	// grafo_eliminar_arista(grafo, numero1, numero2);
-	// grafo_eliminar_arista(grafo, numero1, numero3);
-	// grafo_eliminar_arista(grafo, numero2, numero1);
-
-	
-	// grafo_eliminar_vertice(grafo, numero1);
-	// printf("Vertices: %d\n", grafo_cantidad_vertices(grafo));
-	// grafo_eliminar_vertice(grafo, numero2);
-	// printf("Vertices: %d\n", grafo_cantidad_vertices(grafo));
-	// grafo_eliminar_vertice(grafo, numero3);
-	// printf("Vertices: %d\n", grafo_cantidad_vertices(grafo));
-	// grafo_eliminar_vertice(grafo, numero4);
-	// printf("Vertices: %d\n", grafo_cantidad_vertices(grafo));
-
-
-	// printf("\nArista: %d\n", grafo_obtener_peso_arista(grafo, numero1, numero2));
-	// printf("\nArista: %d\n", grafo_obtener_peso_arista(grafo, numero1, numero3));
-	// printf("\nArista: %d\n", grafo_obtener_peso_arista(grafo, numero2, numero1));
-
-
-	// if (grafo_son_adyacentes(grafo, numero2, numero1))
-	// 	printf("Son adyacentes\n");
-	// else
-	// 	printf("No son adyacentes\n");
-
-	grafo_destruir(grafo);
-
-	free(numero1);
-	free(numero2);
-	free(numero3);
-	free(numero4);
-
+	// Enviamos a procesamiento
+	procesar_red_caminos_minimos(archivo);
 
 	return 0;
 }

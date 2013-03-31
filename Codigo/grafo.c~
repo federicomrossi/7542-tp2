@@ -45,7 +45,7 @@ typedef arista_t* lista_dato_t;
 struct _grafo_t
 {
 	vertice_t* primerVertice;	// Puntero al primer vértice del grafo
-	vertice_t* ultimoVertice;	// Puntero al último vértice del grafo
+	vertice_t* ultimoVertice;   // Puntero al último vértice del grafo
 	int cantidadVertices;		// Cantidad de vértices del grafo
 };
 

@@ -23,17 +23,17 @@
 // Tipo que representa a un nodo de la lista
 typedef struct _nodo_lista_t
 {
-	lista_dato_t dato;				// Dato que almacena el nodo.
-	struct _nodo_lista_t* sig;		// Puntero al nodo siguiente.
+	lista_dato_t dato;			// Dato que almacena el nodo.
+	struct _nodo_lista_t* sig;	// Puntero al nodo siguiente.
 
 } nodo_lista_t;
 
 // Tipo que representa a una lista
 struct _lista_t
 {
-	nodo_lista_t* primero;	// Puntero al primer elemento de la lista
-	nodo_lista_t* ultimo;	// Puntero al último elemento de la lista
-	size_t largo;			// Cantidad de elementos que tiene la lista
+	nodo_lista_t* primero; // Puntero al primer elemento de la lista
+	nodo_lista_t* ultimo;  // Puntero al último elemento de la lista
+	size_t largo;          // Cantidad de elementos que tiene la lista
 };
 
 // Tipo que representa a un iterador de la lista 
