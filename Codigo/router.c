@@ -67,7 +67,6 @@ typedef device_t* grafo_dato_t;
  * DEFINICIÓN DE LOS TIPOS DE DATOS
  * *****************************************************************/
 
-
 // Tipo que representa a un host de una red.
 struct _host_t
 {
@@ -93,11 +92,14 @@ struct _route_t
 };
 
 
+
 /* ******************************************************************
  * FUNCIONES AUXILIARES
  * *****************************************************************/
 
-//
+// Crea un host.
+// POST: devuelve un host o NULL si no ha sido posible llevar a cabo
+// la creación del mismo.
 host_t* host_crear()
 {
 	host_t *host = (host_t*) malloc(sizeof(host_t));
@@ -105,13 +107,17 @@ host_t* host_crear()
 	return host;
 }
 
-//
+// Destruye un host.
+// PRE: 'host' es un host existente.
+// POST: se eliminó el host.
 void host_destruir(host_t *host)
 {
 	free(host);
 }
 
-//
+// Crea un dispositivo.
+// POST: devuelve un dispositivo o NULL si no ha sido posible llevar a cabo
+// la creación del mismo.
 device_t* device_crear()
 {
 	device_t *device = (device_t*) malloc(sizeof(device_t));
@@ -119,13 +125,17 @@ device_t* device_crear()
 	return device;
 }
 
-//
+// Destruye un dispositivo.
+// PRE: 'dispositivo' es un dispositivo existente.
+// POST: se eliminó el dispositivo.
 void device_destruir(device_t *device)
 {
 	free(device);
 }
 
-//
+// Crea una ruta o conexión.
+// POST: devuelve una ruta o NULL si no ha sido posible llevar a cabo
+// la creación del mismo.
 route_t* route_crear()
 {
 	route_t *route = (route_t*) malloc(sizeof(route_t));
@@ -133,14 +143,13 @@ route_t* route_crear()
 	return route;
 }
 
-//
+// Destruye una ruta o conexión.
+// PRE: 'device' es una ruta existente.
+// POST: se eliminó la ruta.
 void route_destruir(route_t *route)
 {
 	free(route);
 }
-
-
-
 
 // Función que realiza la apertura de un archivo.
 // PRE: 'archivo' es el nombre (y extensión) del archivo a abrir.
@@ -179,8 +188,11 @@ bool esPrefijo(const char *d, const char *q)
 	return true;
 }
 
-
-//
+// Función que dada una línea de la sección [host] del archivo de 
+// especificación de ruteo, se encarga de parsear la información que en ella 
+// está contenida.
+// PRE: 'buffer' es un string con el formato '[nombre],[IP],[nombre_router]'.
+// POST: devuelve un puntero a un host que contiene la información parseada.
 host_t* parser_host(char *buffer) {
 	
 	// Creamos un host nuevo
@@ -206,7 +218,11 @@ host_t* parser_host(char *buffer) {
 	return host;
 }
 
-// 
+// Función que dada una línea de la sección [device] del archivo de 
+// especificación de ruteo, se encarga de parsear la información que en ella 
+// está contenida.
+// PRE: 'buffer' es un string con el formato '[nombre_router],[IP]'.
+// POST: devuelve un puntero a un device que contiene la información parseada.
 device_t* parser_device(char *buffer)
 {
 	// Creamos un device nuevo
@@ -227,7 +243,11 @@ device_t* parser_device(char *buffer)
 	return device;
 }
 
-// 
+// Función que dada una línea de la sección [route] del archivo de 
+// especificación de ruteo, se encarga de parsear la información que en ella 
+// está contenida.
+// PRE: 'buffer' es un string con el formato '[router_ini]->[router_fin],peso'.
+// POST: devuelve un puntero a un route que contiene la información parseada.
 route_t* parser_route(char *buffer)
 {
 	// Creamos una conexión nueva
@@ -285,7 +305,17 @@ device_t* buscar_device(lista_t *devices, char *nombre)
 	return NULL;
 }
 
-// 
+// Función que procesa el archivo de especificación de ruteo.
+// PRE: 'archivo' es el nombre de archivo (incluyendo su extensión) donde
+// se encuentran especificadas las reglas de routeo, los dispositivos y
+// hosts existentes en la red; 'devices' es una lista de dispositivos 
+// (device_t); 'hosts' es una lista de hosts (host_t). 
+// POST: se devuelve un grafo cuyos vértices son los dispositivos procesados
+// (de tipo 'device_t') y cuyas aristas son las rutas o conexiones procesadas. 
+// Se almacenan además los dispositivos y hosts procesados en las listas
+// 'devices' y 'hosts' respectivamete.
+// NOTA: Al ser extraídos de las listas deben ser casteados a sus respectivos
+// tipos para poder ser utilizados debidamente.
 grafo_t* armar_red_archivo_de_entrada(char* archivo, lista_t *devices, 
 	lista_t *hosts)
 {
