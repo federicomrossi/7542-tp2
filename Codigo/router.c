@@ -26,7 +26,6 @@ const char S_DEVICE[] = "[device]";
 const char S_ROUTE[] = "[route]";
 enum seccion {NONE, HOST, DEVICE, ROUTE};
 
-
 // Máximo de caracteres permitidos por cadena
 #define MAX_CHARS 20
 // Máximo de caracteres del buffer
@@ -59,7 +58,7 @@ typedef device_t* grafo_dato_t;
 
 #include "lista.h"
 #include "grafo.h"
-//#include "dijkstra.h"
+#include "dijkstra.h"
 
 
 
@@ -187,6 +186,22 @@ bool esPrefijo(const char *d, const char *q)
 
 	return true;
 }
+
+// Función que realiza la comparación alfanumérica de dos cadenas.
+// PRE: 'd' y 'q' son cadenas.
+// POST: devuelve < 0 si d<q, 0 si d==q, ó > 0 si d>q.
+// int comparacion_alfanumerica_cadenas(const char *d, const char *q)
+// {
+// 	int i, comp;
+// 	for(i = 0; d[i] && q[i]; i++)
+// 	{
+// 		comp = strcmp(d[i], q[i]);
+// 		if(comp < 0) return -1;
+// 		else if (comp > 0) return 1;
+// 	}
+
+// 	return 0;
+// }
 
 // Función que dada una línea de la sección [host] del archivo de 
 // especificación de ruteo, se encarga de parsear la información que en ella 
@@ -408,11 +423,17 @@ void enviar_caminos_minimos_salida_estandar()
 	return;
 }
 
+
+
 // Función que establece el criterio de selección de caminos para
 // el caso de poseer dos caminos de igual longitud.
-void criterio_de_seleccion_de_camino()
+// PRE: 'c1' y 'c2' son parámetros que deben haber sido creados como
+// tipo 'device_t' (se los pasa como void por ser tratado por listas)
+int criterio_de_seleccion_de_camino(lista_dato_t c1, lista_dato_t c2)
 {
-	return;
+	printf("c1: %s - ", ((device_t*) c1)->nombre);
+	printf("c2: %s\n", ((device_t*) c2)->nombre);	
+	return strcmp(((device_t*) c1)->nombre, ((device_t*) c2)->nombre);
 }
 
 
@@ -424,26 +445,58 @@ void criterio_de_seleccion_de_camino()
 // 
 void procesar_red_caminos_minimos(char *archivo)
 {
-	grafo_t *grafo_routers = NULL;
-	lista_t* devices = lista_crear();
+	grafo_t *grafo_devices = NULL;
+	lista_t *devices = lista_crear();
 	lista_t *hosts = lista_crear();
+	lista_dato_t device_origen;
 
 	// Armamos el grafo de routers
 	if(archivo)
 		// Procesamos hosts y devices desde archivo de entrada.
-		grafo_routers = armar_red_archivo_de_entrada(archivo, devices, hosts);
-		// armar_red_archivo_de_entrada(archivo, devices, hosts);
+		grafo_devices = armar_red_archivo_de_entrada(archivo, devices, hosts);
 	else
 		// Procesamos hosts y devices desde entrada estandar
 		//grafo_routers = armar_red_entrada_estandar(devices, hosts);
-		printf("nada");
+		printf("Procesamos hosts y devices desde entrada estandar");
 
 	// Buscamos caminos mínimos por Dijkstra
+	lista_ver_primero(devices, &device_origen);
+	lista_t* resultados = dijkstra_caminos_minimos(grafo_devices,
+		device_origen, criterio_de_seleccion_de_camino);
+
+	lista_t *camino = dijkstra_obtener_camino(resultados, 
+		(lista_dato_t) buscar_device(devices, "4"));
+
+
+
+	printf("largo: %d\n", lista_largo(camino));
+
+	// lista_dato_t aux;
+	// lista_ver_primero(camino, &aux);
+	// printf("nombre: %s\n", ((device_t*)aux)->nombre);
+
+	lista_iter_t* iter = lista_iter_crear(camino);
+	lista_dato_t aux;
+
+	while(!lista_iter_al_final(iter))
+	{
+		lista_iter_ver_actual(iter, &aux);
+		printf("nombre: %s\n", ((device_t*)aux)->nombre);
+		lista_iter_avanzar(iter);
+	}
 	
+	lista_iter_destruir(iter);
+
+	dijkstra_destruir_resultados(resultados);
+
+	
+
+	/////printf("dispositivo: %s\n", ((device_t*)a)->nombre);
+
 	// Enviamos resultado a salida estandar
 
 	// Liberamos memoria utilizada
 	lista_destruir(devices, free);
 	lista_destruir(hosts, free);
-	grafo_destruir(grafo_routers);
+	grafo_destruir(grafo_devices);
 }

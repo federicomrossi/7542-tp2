@@ -13,12 +13,12 @@
 #define ROUTER_H
 
 
+
 /* ******************************************************************
  * FUNCIONES DE LA LIBRERIA
  * *****************************************************************/
 
 // [DOCUMENTAR]
 void procesar_red_caminos_minimos(char *archivo);
-
 
 #endif
