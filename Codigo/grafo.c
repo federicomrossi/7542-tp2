@@ -446,7 +446,7 @@ bool grafo_son_adyacentes(grafo_t *grafo, grafo_dato_t di,
 	return (grafo_obtener_arista(grafo, di, df) != NULL);
 }
 
-// Devuelve los vértices de un grafo.
+// Carga una lista con los vértices de un grafo.
 // PRE: 'grafo' es un grafo existente; 'listaDeVertices' es un arreglo 
 // del tamaño de la cantidad de vértices existente en el grafo al 
 // momento de llamar a esta función (el usuario es el responsable de

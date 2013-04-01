@@ -207,7 +207,7 @@ bool lista_borrar_primero(lista_t *lista, lista_dato_t *dato)
 	return true;
 }
 
-// Destruye la lista enlazada. El parámetro 
+// Destruye la lista enlazada.
 // PRE: 'lista' es una lista existente; 'destruir_dato' es una función
 // que se encarga de destruir los datos (e.g.: free()). En caso de que 
 // los datos no necesiten ser destruidos se debe pasar NULL.

@@ -394,6 +394,11 @@ grafo_t* armar_red_archivo_de_entrada(char* archivo, lista_t *devices,
 // 
 grafo_t* armar_red_entrada_estandar(lista_t *devices, lista_t *hosts)
 {
+	// Creamos el grafo de la red
+	//grafo_t* grafo_red = grafo_crear();
+
+	exit(0);
+
 	return NULL;
 }
 
@@ -495,8 +500,7 @@ void procesar_red_caminos_minimos(char *archivo)
 		grafo_devices = armar_red_archivo_de_entrada(archivo, devices, hosts);
 	else
 		// Procesamos hosts y devices desde entrada estandar
-		//grafo_routers = armar_red_entrada_estandar(devices, hosts);
-		printf("Procesamos hosts y devices desde entrada estandar");
+		grafo_devices = armar_red_entrada_estandar(devices, hosts);
 
 	// En el primer elemento de la lista se encuentra el origen de los
 	// dispositivos
@@ -528,6 +532,9 @@ void procesar_red_caminos_minimos(char *archivo)
 		// Enviamos a la salida estandar
 		enviar_camino_salida_estandar((host_t*) host_origen, 
 			(host_t*) host_destino, camino);
+
+		// Destruimos la lista de caminos
+		lista_destruir(camino, NULL);
 
 		lista_iter_avanzar(iter);
 	}
