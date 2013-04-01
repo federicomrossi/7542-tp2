@@ -465,11 +465,11 @@ void procesar_red_caminos_minimos(char *archivo)
 		device_origen, criterio_de_seleccion_de_camino);
 
 	lista_t *camino = dijkstra_obtener_camino(resultados, 
-		(lista_dato_t) buscar_device(devices, "4"));
+		(lista_dato_t) buscar_device(devices, "5"));
 
 
 
-	printf("largo: %d\n", lista_largo(camino));
+	//printf("largo: %d\n", lista_largo(camino));
 
 	// lista_dato_t aux;
 	// lista_ver_primero(camino, &aux);

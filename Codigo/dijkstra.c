@@ -131,7 +131,6 @@ lista_t* dijkstra_caminos_minimos(grafo_t *grafo, grafo_dato_t *origen,
 		}
 	}
 
-
 	// (Paso 9)
 	while(!cola_esta_vacia(NM))
 	{
@@ -154,21 +153,6 @@ lista_t* dijkstra_caminos_minimos(grafo_t *grafo, grafo_dato_t *origen,
 					Vi->peso_camino = peso_camino;
 					Vi->nodo_previo = a;
 				}
-				// else if(Vi->peso_camino == peso_camino)
-				// {
-				// 	printf("entro");
-				// 	// Cuando tenemos dos caminos por los que conseguimos
-				// 	// un camino mínimo, apelamos al criterio de selección
-				// 	// de camino definido por el usuario.
-				// 	if(criterio_seleccion(((Vi->nodo_previo)->dato), 
-				// 		a->dato) > 0)
-				// 	{
-				// 		// Si es mayor que cero, el segundo nombre de
-				// 		// nodo es menor que el primero.
-				// 		Vi->peso_camino = peso_camino;
-				// 		Vi->nodo_previo = a;
-				// 	}
-				// }
 			}
 
 			// (Paso 4)
@@ -177,32 +161,35 @@ lista_t* dijkstra_caminos_minimos(grafo_t *grafo, grafo_dato_t *origen,
 		
 		// (Paso 6)
 		cola_encolar(M, a);
-		a = NULL;
+		a = Vi = NULL;
 		menor_peso = INFINITO;
 
 		while(!cola_esta_vacia(CA))
 		{
-			// (Paso 7)
 			cola_desencolar(CA, &Vi);
 
-			// (Paso 8)
 			if(menor_peso > Vi->peso_camino)
 			{
 				if(a) cola_encolar(NM, a);
-				menor_peso = Vi->peso_camino;
 				a = Vi;
+				menor_peso = Vi->peso_camino;
+				continue;
 			}
-			if(menor_peso == Vi->peso_camino)
+			else if(menor_peso == Vi->peso_camino)
 			{
-				if(criterio_seleccion(((Vi->nodo_previo)->dato), a->dato) > 0)
+				if(criterio_seleccion(Vi->dato, a->dato) < 0)
 				{
-					if(a) cola_encolar(NM, a);
-					menor_peso = Vi->peso_camino;
+					cola_encolar(NM, a);
 					a = Vi;
+					menor_peso = Vi->peso_camino;
 				}
+				else
+					cola_encolar(NM, Vi);
+
+				continue;
 			}
-			else
-				cola_encolar(NM, Vi);
+			
+			cola_encolar(NM, Vi);
 		}
 	}
 
