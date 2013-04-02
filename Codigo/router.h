@@ -39,8 +39,8 @@
 // ese tramo del recorrido.
 // Si no se especifica ningún archivo de entrada, el sistema solicitará
 // que se ingresen los datos a través de la entrada estandar, siendo
-// estrictamente necesario ingresarlos con el mismo formato establecido
-// anteriormente para los archivos.
+// estrictamente necesario ingresarlos correctamente sin errores, con el
+// formato que se indicará por pantalla.
 // POST: Los resultados se envían a la salida estandar.
 void procesar_red_caminos_minimos(char *archivo);
 

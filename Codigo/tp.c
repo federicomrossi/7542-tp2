@@ -1,5 +1,5 @@
 /* ******************************************************************
- * PROGRAMA CALCULADOR DE ROUTEO ENTRE PC's
+ * PROGRAMA CALCULADOR DE ROUTEO ENTRE PCs
  * ******************************************************************
  * 
  * Facultad de Ingeniería - UBA
@@ -12,29 +12,60 @@
  *
  * ******************************************************************
  *
- * [ REVISARRRRRRR!!!!! ] Programa que se encarga de procesar un 
- * archivo con el listado de interrupciones de servicio eléctrico y 
- * calcula la multa que debe ser aplicada a cada cliente, enviandose 
- * estas a la salida estandar del sistema con el formato 
- * [número_cliente]:[multa].
+ * Programa que se encarga del cálculo de ruteo entre PCs a través
+ * de los dispositivos que conforman una red (tales como routers u
+ * otros). El cálculo se centra en encontrar el camino que minimi-
+ * ce el recorrido de los paquetes de datos desde un host origen 
+ * hacia los demás. 
+ *
  *
  * FORMA DE USO
  * ============
  * 
- * El programa se ejecuta del siguiente modo:
+ * Para el caso de utilizar un archivo de especificación de routeo, 
+ * el programa se debe ejecutar del siguiente modo:
  *
  *		# ./tp [archivo]
  *
  * donde,
  *
- *		archivo: nombre de archivo (incluyendo su extensión) donde 
- *				 se registran las interrupciones y el cliente al 
- *				 que pertenece cada una de estas;
+ *		archivo: nombre del archivo (incluyendo su extensión)
  * 
- * NOTA: El archivo de interrupciones debe seguir de manera estricta 
- * el siguiente formato:
  *
- *		[número_de_cliente]:[consumo_típico]:[duración_interrupción]
+ * Respecto al formato, el archivo debe estar dividido en secciones, 
+ * con las siguientes etiquetas: '[host]', '[device]' y '[route]'. En 
+ * la sección [host] se deben especificar los host que integran la red, 
+ * con el formato siguiente:
+ * 
+ *		[NOMBRE],[IP],[NOMBRE_ROUTER]
+ *
+ * El primer host ingresado se considera el host origen. En la sección 
+ * [device] se deben especificar los dispositivos que integran la red, 
+ * con el formato siguiente:
+ *
+ *		[NOMBRE_ROUTER],[IP]
+ *
+ * El primer dispositivo ingresado se considera el dispositivo origen. 
+ * Por último, la sección [route] contiene el registro de las conexiones 
+ * entre los dispositivos, siendo su formato el siguiente:
+ *
+ *		[D1]->[D2],[PESO]
+ *
+ * donde, D1 es el dispositivo de partida y D2 el dispositivo de llegada 
+ * para ese tramo del recorrido, y PESO es el peso correspondiente a esa
+ * conexión.
+ *
+ * Para el caso de utilizar la entrada estandar para el ingreso de las
+ * especificaciones de routeo, el programa se debe ejecutar del siguiente
+ * modo:
+ *
+ *		# ./tp
+ *
+ * De esta manera, el sistema solicitará que se ingresen los datos a 
+ * través de la entrada estandar, siendo estrictamente necesario 
+ * ingresarlos correctamente sin errores, con el formato que se 
+ * indicará por pantalla.
+ *
  */
 
 

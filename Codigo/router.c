@@ -43,7 +43,6 @@ typedef struct _route_t route_t;
 
 
 
-
 /* ******************************************************************
  * INCLUSIÓN DE LIBRERIAS Y TADS EXTERNOS
  * *****************************************************************/
@@ -95,7 +94,6 @@ struct _route_t
 /* ******************************************************************
  * FUNCIONES AUXILIARES
  * *****************************************************************/
-
 
 // Crea un host.
 // POST: devuelve un host o NULL si no ha sido posible llevar a cabo
@@ -174,6 +172,43 @@ FILE* archivo_abrir(char *archivo) {
 // PRE: 'fp' es un puntero al archivo
 void archivo_cerrar(FILE* fp) {
 	fclose(fp);
+}
+
+// Función que limpia la pantalla de la consola. Funciona unicamente
+// en GNU/Linux. 
+void clrscr()
+{
+	system("clear");
+}
+
+// Función que dado un mensaje, permite al usuario elegir por
+// Si o por No.
+// PRE: 'mensaje' es el mensaje o pregunta que se le desea hacer
+// al usuario.
+// POST: se devuelve true si el usuario ingresa el caracter 'S' o 's',
+// o false si se ingresa el caracter 'N' o 'n'.
+bool entrada_estandar_seguir_recibiendo_datos(char *mensaje)
+{
+	// Bucle para lograr que getchar espere a que el usuario responda
+	while (getchar() == '\n')
+	{
+		// Imprimimos mensaje
+		printf("%s [s/N]: ", mensaje);
+
+		// Procesamos elección del usuario
+		switch(getchar())
+		{
+			case 's':	return true;
+			case 'S':	return true;
+			case 'N':	return false;
+			case 'n':	return false;
+			default:	printf("Respuesta inválida. ");
+						clrscr();
+						break;
+		}					
+	}
+
+	return false;
 }
 
 // Función que verifica si una cadena es prefijo de otra
@@ -366,7 +401,7 @@ grafo_t* armar_red_archivo_de_entrada(char* archivo, lista_t *devices,
 
 			// Procesamos device
 			case DEVICE:	device = parser_device(buffer);
-							// Agregamos el device como vértice del grafo
+							// Agregamos el device como vértice en el grafo
 							grafo_nuevo_vertice(grafo_red, device);
 							// Agregamos el device a la lista de devices
 							lista_insertar_ultimo(devices, 
@@ -391,15 +426,99 @@ grafo_t* armar_red_archivo_de_entrada(char* archivo, lista_t *devices,
 	return grafo_red;
 }
 
-// 
+// Función que solicita y procesa las especificaciones de routeo al usuario.
+// PRE: 'devices' es una lista de dispositivos (device_t); 'hosts' es una 
+// lista de hosts (host_t). 
+// POST: se devuelve un grafo cuyos vértices son los dispositivos procesados
+// (de tipo 'device_t') y cuyas aristas son las rutas o conexiones procesadas. 
+// Se almacenan además los dispositivos y hosts procesados en las listas
+// 'devices' y 'hosts' respectivamete.
+// NOTA: Al ser extraídos de las listas deben ser casteados a sus respectivos
+// tipos para poder ser utilizados debidamente.
 grafo_t* armar_red_entrada_estandar(lista_t *devices, lista_t *hosts)
 {
 	// Creamos el grafo de la red
-	//grafo_t* grafo_red = grafo_crear();
+	grafo_t* grafo_red = grafo_crear();
 
-	exit(0);
+	char nombre[MAX_CHARS], ip[MAX_CHARS], nombre_router[MAX_CHARS];
+	char d1[MAX_CHARS], d2[MAX_CHARS], peso[MAX_CHARS];
 
-	return NULL;
+	// Leer hosts
+	clrscr();
+	printf("Especificación de HOSTS\n");
+
+	while(true)
+	{
+		printf("\nIngrese un host (NOMBRE IP NOMBRE_ROUTER): ");
+		scanf("%s %s %s", nombre, ip, nombre_router);
+
+		host_t *host = host_crear();
+		strcpy(host->nombre, nombre);
+		strcpy(host->ip, ip);
+		strcpy(host->dispositivo_nombre, nombre_router);
+
+		// Agregamos el host a la lista de hosts
+		lista_insertar_ultimo(hosts, (lista_dato_t) host);
+
+		printf("Host agregado. ");
+
+		if(!entrada_estandar_seguir_recibiendo_datos("¿Desea agregar otro?"))
+			break;
+	}
+
+	// Leer devices
+	clrscr();
+	printf("Especificación de DEVICES\n");
+
+	while(true)
+	{
+		printf("\nIngrese un dispositivo (NOMBRE_ROUTER IP): ");
+		scanf("%s %s", nombre, ip);
+
+		device_t *device = device_crear();
+		strcpy(device->nombre, nombre);
+		strcpy(device->ip, ip);
+		
+		// Agregamos el device como vértice en el grafo
+		grafo_nuevo_vertice(grafo_red, device);
+		// Agregamos el device a la lista de devices
+		lista_insertar_ultimo(devices, (lista_dato_t) device);
+
+		printf("Dispositivo agregado. ");
+
+		if(!entrada_estandar_seguir_recibiendo_datos("¿Desea agregar otro?"))
+			break;
+	}
+
+	// Leer routes
+	clrscr();
+	printf("Especificación de ROUTES\n");
+
+	while(true)
+	{
+		printf("\nIngrese una ruta (DISPOSITIVO_1 DISPOSITIVO_2 PESO): ");
+		scanf("%s %s %s", d1, d2, peso);
+
+		route_t *route = route_crear();
+		strcpy(route->ini, d1);
+		strcpy(route->fin, d2);
+		route->peso = atoi(peso);
+
+		// Creamos la arista de la conexión en el grafo
+		grafo_crear_arista(grafo_red, buscar_device(devices, route->ini),
+									  buscar_device(devices, route->fin),
+									  route->peso);
+		route_destruir(route);
+
+		printf("Ruta agregada. ");
+
+		if(!entrada_estandar_seguir_recibiendo_datos("¿Desea agregar otra?"))
+			break;
+	}
+	
+	clrscr();
+
+	return grafo_red;
 }
 
 // Función que se encarga de envíar a la salida estandar el camino
@@ -461,7 +580,6 @@ int criterio_de_seleccion_de_camino(lista_dato_t c1, lista_dato_t c2)
  * FUNCIONES DE LA LIBRERIA
  * *****************************************************************/
 
-
 // Función que procesa una red compuesta de hosts y dispositivos, tales
 // como routers, con el fin del encontrar el camino minimo para el envío
 // de datos desde un host origen hacia los demas hosts existentes en la
@@ -481,8 +599,8 @@ int criterio_de_seleccion_de_camino(lista_dato_t c1, lista_dato_t c2)
 // ese tramo del recorrido.
 // Si no se especifica ningún archivo de entrada, el sistema solicitará
 // que se ingresen los datos a través de la entrada estandar, siendo
-// estrictamente necesario ingresarlos con el mismo formato establecido
-// anteriormente para los archivos.
+// estrictamente necesario ingresarlos correctamente sin errores, con el
+// formato que se indicará por pantalla.
 // POST: Los resultados se envían a la salida estandar.
 void procesar_red_caminos_minimos(char *archivo)
 {
