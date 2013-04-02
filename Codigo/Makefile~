@@ -164,4 +164,7 @@ clean:
 	$(RM) $(o_files) $(o_files:.o=.deps) $(VGLOGFILE) $(target)
 
 valgrind: 
-	valgrind $(VGFLAGS) ./$(target)
+	valgrind $(VGFLAGS) ./$(target) input
+
+valgrindalt: 
+	valgrind $(VGFLAGS) ./$(target) 
