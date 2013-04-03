@@ -165,12 +165,6 @@ void archivo_cerrar(FILE* fp) {
 	fclose(fp);
 }
 
-// Función que limpia la pantalla de la consola. Funciona unicamente
-// en GNU/Linux. 
-void clrscr() {
-	system("clear");
-}
-
 // Función que dado un mensaje, permite al usuario elegir por
 // Si o por No.
 // PRE: 'mensaje' es el mensaje o pregunta que se le desea hacer
@@ -190,7 +184,6 @@ bool entrada_estandar_seguir_recibiendo_datos(char *mensaje) {
 			case 'N':	return false;
 			case 'n':	return false;
 			default:	printf("Respuesta inválida. ");
-						clrscr();
 						break;
 		}					
 	}
@@ -418,11 +411,10 @@ grafo_t* armar_red_entrada_estandar(lista_t *devices, lista_t *hosts) {
 	char d1[MAX_CHARS], d2[MAX_CHARS], peso[MAX_CHARS];
 
 	// Leer hosts
-	clrscr();
-	printf("Especificación de HOSTS\n");
+	printf("\nEspecificación de HOSTS\n");
 
 	while(true) {
-		printf("\nIngrese un host (NOMBRE IP NOMBRE_ROUTER): ");
+		printf("\n\nIngrese un host (NOMBRE IP NOMBRE_ROUTER): ");
 		scanf("%s %s %s", nombre, ip, nombre_router);
 
 		host_t *host = host_crear();
@@ -440,8 +432,7 @@ grafo_t* armar_red_entrada_estandar(lista_t *devices, lista_t *hosts) {
 	}
 
 	// Leer devices
-	clrscr();
-	printf("Especificación de DEVICES\n");
+	printf("\n\nEspecificación de DEVICES\n");
 
 	while(true) {
 		printf("\nIngrese un dispositivo (NOMBRE_ROUTER IP): ");
@@ -463,8 +454,7 @@ grafo_t* armar_red_entrada_estandar(lista_t *devices, lista_t *hosts) {
 	}
 
 	// Leer routes
-	clrscr();
-	printf("Especificación de ROUTES\n");
+	printf("\n\nEspecificación de ROUTES\n");
 
 	while(true) {
 		printf("\nIngrese una ruta (DISPOSITIVO_1 DISPOSITIVO_2 PESO): ");
@@ -487,7 +477,7 @@ grafo_t* armar_red_entrada_estandar(lista_t *devices, lista_t *hosts) {
 			break;
 	}
 	
-	clrscr();
+	printf("\n");
 
 	return grafo_red;
 }
