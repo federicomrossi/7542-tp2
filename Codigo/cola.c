@@ -26,7 +26,7 @@ typedef struct _nodo_cola_t {
 
 
 struct _cola_t {
-    nodo_cola_t* primero;   // Puntero al primer elemento de la cola
+	nodo_cola_t* primero;	// Puntero al primer elemento de la cola
 	nodo_cola_t* ultimo;	// Puntero al último elemento de la cola
 };
 
@@ -41,7 +41,7 @@ struct _cola_t {
 // llevar a cabo la creación de la misma.
 cola_t* cola_crear() {
 	// Solicitamos espacio en memoria
-	cola_t* cola = (cola_t*) malloc(sizeof(cola_t));	
+	cola_t* cola = (cola_t*) malloc(sizeof(cola_t));
 	if(! cola) return NULL;
 
 	// Seteamos valores iniciales de la cola
@@ -55,23 +55,23 @@ cola_t* cola_crear() {
 // PRE: 'cola' es una cola existente.
 // POST: se eliminaron todos los elementos de la cola.
 void cola_destruir(cola_t *cola) {
-    nodo_cola_t *nodo_actual,*nodo;
+	nodo_cola_t *nodo_actual,*nodo;
 
 	// Si hay elementos, comenzamos la eliminación
-    if(cola->primero) {
-        nodo_actual = cola->primero;
-        
-        // Eliminación de los nodos uno a uno.
-        while(nodo_actual->sig) {
-            nodo = nodo_actual->sig;
-            free(nodo_actual);
-            nodo_actual = nodo;
-        }
-        
-        free(nodo_actual);
-    }
+	if(cola->primero) {
+		nodo_actual = cola->primero;
 
-    free(cola);
+		// Eliminación de los nodos uno a uno.
+		while(nodo_actual->sig) {
+			nodo = nodo_actual->sig;
+			free(nodo_actual);
+			nodo_actual = nodo;
+		}
+
+		free(nodo_actual);
+	}
+
+	free(cola);
 }
 
 // Verifica si una cola tiene o no elementos.
@@ -97,7 +97,7 @@ bool cola_encolar(cola_t *cola, const cola_dato_t valor) {
 
 	// Enlazamos el nodo al final de la cola.
 	if (cola->primero)
-        cola->ultimo->sig = nodo;
+		cola->ultimo->sig = nodo;
 	else
 		cola->primero = nodo;
 
@@ -126,19 +126,19 @@ bool cola_ver_primero(const cola_t *cola, cola_dato_t *valor) {
 // contiene un elemento menos (si la cola no estaba vacía). Devuelve true 
 // si la acción se llevo a cabo con éxito o false en caso de error.
 bool cola_desencolar(cola_t *cola, cola_dato_t *valor) {
-    if(!cola->primero) return false;
+	if(!cola->primero) return false;
 	
 	// Tomamos dato del nodo y lo guardamos en valor.
-    nodo_cola_t *nodo = cola->primero;
-    *valor = nodo->dato;
+	nodo_cola_t *nodo = cola->primero;
+	*valor = nodo->dato;
 	
 	// Desenlazamos nodo y liberamos memoria.
-    if(nodo->sig)
-        cola->primero = nodo->sig;
-    else
-        cola->primero = cola->ultimo = NULL;
-        
-    free(nodo);
+	if(nodo->sig)
+		cola->primero = nodo->sig;
+	else
+		cola->primero = cola->ultimo = NULL;
 
-    return true;
+	free(nodo);
+
+	return true;
 }

@@ -6,7 +6,7 @@
  * 
  * Librería de funciones relacionadas con el algoritmo de caminos 
  * mínimos de Dijkstra. 
- */ 
+ */
 
 
 #include <stdio.h>
@@ -103,7 +103,7 @@ lista_t* dijkstra_caminos_minimos(grafo_t *grafo, lista_dato_t origen,
 	for(i = 0; i < cantidad_vertices; i++) {
 		// Creamos un nodo para cada vértice
 		dijkstra_nodo_t* nodo = (dijkstra_nodo_t*) 
-								malloc(sizeof(dijkstra_nodo_t));
+									malloc(sizeof(dijkstra_nodo_t));
 		if(!nodo) return NULL;
 
 		// Seteamos datos iniciales del nodo

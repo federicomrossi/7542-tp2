@@ -30,13 +30,13 @@ el programa se debe ejecutar del siguiente modo:
 donde,
 
 	archivo: nombre del archivo (incluyendo su extensión)
- 
+
 
 Respecto al formato, el archivo debe estar dividido en secciones, 
 con las siguientes etiquetas: '[host]', '[device]' y '[route]'. En 
 la sección [host] se deben especificar los host que integran la red, 
 con el formato siguiente:
- 
+
 	[NOMBRE],[IP],[NOMBRE_ROUTER]
 
 El primer host ingresado se considera el host origen. En la sección 

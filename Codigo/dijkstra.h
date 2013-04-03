@@ -6,7 +6,7 @@
  * 
  * Librería de funciones relacionadas con el algoritmo de caminos 
  * mínimos de Dijkstra. 
- */ 
+ */
 
 
 #ifndef DIJKSTRA_H
