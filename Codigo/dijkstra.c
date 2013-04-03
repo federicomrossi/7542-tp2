@@ -81,8 +81,7 @@ struct _dijkstra_nodo_t {
 // Esta lista es utilizada por otras funciones de la librería para poder
 // brindar resultados personalizados de acuerdo a lo que se necesite.
 lista_t* dijkstra_caminos_minimos(grafo_t *grafo, lista_dato_t origen, 
-	int criterio_seleccion(lista_dato_t, lista_dato_t))
-{
+	int criterio_seleccion(lista_dato_t, lista_dato_t)) {
 	// Variables auxiliares de procesamiento
 	dijkstra_nodo_t *a = NULL, *Vi;
 	int menor_peso = INFINITO;
@@ -101,8 +100,7 @@ lista_t* dijkstra_caminos_minimos(grafo_t *grafo, lista_dato_t origen,
 	grafo_obtener_vertices(grafo, arregloDeVertices);
 
 	// Iteramos sobre el arreglo de vértices
-	for(i = 0; i < cantidad_vertices; i++)
-	{
+	for(i = 0; i < cantidad_vertices; i++) {
 		// Creamos un nodo para cada vértice
 		dijkstra_nodo_t* nodo = (dijkstra_nodo_t*) 
 								malloc(sizeof(dijkstra_nodo_t));
@@ -117,25 +115,21 @@ lista_t* dijkstra_caminos_minimos(grafo_t *grafo, lista_dato_t origen,
 		// de los vértices que no son el origen
 		if(arregloDeVertices[i] != origen)
 			cola_encolar(NM, nodo);
-		else
-		{
+		else {
 			nodo->peso_camino = 0;
 			a = nodo;
 		}
 	}
 
 	// Iteramos hasta marcar todos los nodos
-	while(!cola_esta_vacia(NM))
-	{
+	while(!cola_esta_vacia(NM)) {
 		// Iteramos hasta completar una vuelta de procesamiento de
 		// nodos no marcados
-		while(!cola_esta_vacia(NM))
-		{
+		while(!cola_esta_vacia(NM)) {
 			cola_desencolar(NM, &Vi);
 
 			// Si son adyacentes, comparamos distancias
-			if(grafo_son_adyacentes(grafo, a->dato, Vi->dato))
-			{
+			if(grafo_son_adyacentes(grafo, a->dato, Vi->dato)) {
 				// Calculamos el peso del camino llegando desde nodo actual 'a'
 				int peso_camino = a->peso_camino + 
 					grafo_obtener_peso_arista(grafo, a->dato, Vi->dato);
@@ -143,8 +137,7 @@ lista_t* dijkstra_caminos_minimos(grafo_t *grafo, lista_dato_t origen,
 				// Si el camino llegando desde 'a' es mas corto que el que
 				// se tenía registrado, cambiamos el punto de llegada de Vi
 				// para que provenga desde 'a'
-				if(Vi->peso_camino > peso_camino)
-				{
+				if(Vi->peso_camino > peso_camino) {
 					Vi->peso_camino = peso_camino;
 					Vi->nodo_previo = a;
 				}
@@ -165,26 +158,22 @@ lista_t* dijkstra_caminos_minimos(grafo_t *grafo, lista_dato_t origen,
 		// Iteramos hasta pasar todos los nodos de CA a NM excepto
 		// aquel que posee la menor distancia, el cual pasa a ser
 		// el nuevo nodo actual 'a'
-		while(!cola_esta_vacia(CA))
-		{
+		while(!cola_esta_vacia(CA)) {
 			cola_desencolar(CA, &Vi);
 
 			// Caso para cuando aparece un nodo con menor
 			// distancia
-			if(menor_peso > Vi->peso_camino)
-			{
+			if(menor_peso > Vi->peso_camino) {
 				if(a) cola_encolar(NM, a);
 				a = Vi;
 				menor_peso = Vi->peso_camino;
 				continue;
 			}
 			// Caso para cuando las distancias de los nodos son iguales
-			else if(menor_peso == Vi->peso_camino)
-			{
+			else if(menor_peso == Vi->peso_camino) {
 				// Elegimos uno de acuerdo al criterio de selección definido
 				// por el usuario
-				if(criterio_seleccion(Vi->dato, a->dato) < 0)
-				{
+				if(criterio_seleccion(Vi->dato, a->dato) < 0) {
 					cola_encolar(NM, a);
 					a = Vi;
 					menor_peso = Vi->peso_camino;
@@ -218,8 +207,7 @@ lista_t* dijkstra_caminos_minimos(grafo_t *grafo, lista_dato_t origen,
 // PRE: 'lista_resultados' es una lista que contiene los resultados derivados
 // de la función dijkstra_caminos_minimos().
 // POST: Los resultados son destruidos.
-void dijkstra_destruir_resultados(lista_t* lista_resultados)
-{
+void dijkstra_destruir_resultados(lista_t* lista_resultados) {
 	// Destruimos la lista y los nodos que contiene dentro
 	lista_destruir(lista_resultados, free);
 }
@@ -238,8 +226,7 @@ void dijkstra_destruir_resultados(lista_t* lista_resultados)
 // insertado en el grafo, el cual se procesó en la función generadora de 
 // resultados.
 lista_t* dijkstra_obtener_camino(lista_t* lista_resultados, 
-	lista_dato_t *destino)
-{
+	lista_dato_t *destino) {
 	// Creamos lista del camino
 	lista_t* camino = lista_crear();
 	if(!camino) return NULL;
@@ -250,21 +237,17 @@ lista_t* dijkstra_obtener_camino(lista_t* lista_resultados,
 	lista_insertar_primero(camino, previo);
 
 	// Rastreamos camino desde el destino hacia el nodo origen
-	while(previo)
-	{
+	while(previo) {
 		lista_iter_t* iter = lista_iter_crear(lista_resultados);
 		lista_dato_t aux;
 
-		while(!lista_iter_al_final(iter))
-		{
+		while(!lista_iter_al_final(iter)) {
 			lista_iter_ver_actual(iter, &aux);
 			
 			// Buscamos en la lista el nodo previo
-			if(((dijkstra_nodo_t*)aux)->dato == previo)
-			{
+			if(((dijkstra_nodo_t*)aux)->dato == previo) {
 				// Terminamos si se llegó al origen
-				if(!(((dijkstra_nodo_t*)aux)->nodo_previo)) 
-				{
+				if(!(((dijkstra_nodo_t*)aux)->nodo_previo)) {
 					previo = NULL;
 					break;
 				}

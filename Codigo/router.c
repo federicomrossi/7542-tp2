@@ -66,8 +66,7 @@ typedef device_t* grafo_dato_t;
  * *****************************************************************/
 
 // Tipo que representa a un host de una red.
-struct _host_t
-{
+struct _host_t {
 	char nombre[MAX_CHARS];				// Nombre del host
 	char ip[MAX_CHARS];					// IP del host
 	char dispositivo_nombre[MAX_CHARS];	// Nombre del dispositivo al 
@@ -75,15 +74,13 @@ struct _host_t
 };
 
 // Tipo que representa a un dispositivo de una red.
-struct _device_t
-{
+struct _device_t {
 	char nombre[MAX_CHARS];				// Nombre del dispositivo
 	char ip[MAX_CHARS];					// IP del dispositivo
 };
 
 // Tipo que representa una ruta o conexión entre dispositivos
-struct _route_t
-{
+struct _route_t {
 	char ini[MAX_CHARS];				// Nombre del device de partida
 	char fin[MAX_CHARS];				// Nombre del device destino
 	int peso;							// Peso asociado a la conexión
@@ -98,8 +95,7 @@ struct _route_t
 // Crea un host.
 // POST: devuelve un host o NULL si no ha sido posible llevar a cabo
 // la creación del mismo.
-host_t* host_crear()
-{
+host_t* host_crear() {
 	host_t *host = (host_t*) malloc(sizeof(host_t));
 	if(!host) exit(0);
 	return host;
@@ -108,16 +104,14 @@ host_t* host_crear()
 // Destruye un host.
 // PRE: 'host' es un host existente.
 // POST: se eliminó el host.
-void host_destruir(host_t *host)
-{
+void host_destruir(host_t *host) {
 	free(host);
 }
 
 // Crea un dispositivo.
 // POST: devuelve un dispositivo o NULL si no ha sido posible llevar a cabo
 // la creación del mismo.
-device_t* device_crear()
-{
+device_t* device_crear() {
 	device_t *device = (device_t*) malloc(sizeof(device_t));
 	if(!device) exit(0);
 	return device;
@@ -126,16 +120,14 @@ device_t* device_crear()
 // Destruye un dispositivo.
 // PRE: 'dispositivo' es un dispositivo existente.
 // POST: se eliminó el dispositivo.
-void device_destruir(device_t *device)
-{
+void device_destruir(device_t *device) {
 	free(device);
 }
 
 // Crea una ruta o conexión.
 // POST: devuelve una ruta o NULL si no ha sido posible llevar a cabo
 // la creación del mismo.
-route_t* route_crear()
-{
+route_t* route_crear() {
 	route_t *route = (route_t*) malloc(sizeof(route_t));
 	if(!route) exit(0);
 	return route;
@@ -144,8 +136,7 @@ route_t* route_crear()
 // Destruye una ruta o conexión.
 // PRE: 'device' es una ruta existente.
 // POST: se eliminó la ruta.
-void route_destruir(route_t *route)
-{
+void route_destruir(route_t *route) {
 	free(route);
 }
 
@@ -176,8 +167,7 @@ void archivo_cerrar(FILE* fp) {
 
 // Función que limpia la pantalla de la consola. Funciona unicamente
 // en GNU/Linux. 
-void clrscr()
-{
+void clrscr() {
 	system("clear");
 }
 
@@ -187,17 +177,14 @@ void clrscr()
 // al usuario.
 // POST: se devuelve true si el usuario ingresa el caracter 'S' o 's',
 // o false si se ingresa el caracter 'N' o 'n'.
-bool entrada_estandar_seguir_recibiendo_datos(char *mensaje)
-{
+bool entrada_estandar_seguir_recibiendo_datos(char *mensaje) {
 	// Bucle para lograr que getchar espere a que el usuario responda
-	while (getchar() == '\n')
-	{
+	while (getchar() == '\n') {
 		// Imprimimos mensaje
 		printf("%s [s/N]: ", mensaje);
 
 		// Procesamos elección del usuario
-		switch(getchar())
-		{
+		switch(getchar()) {
 			case 's':	return true;
 			case 'S':	return true;
 			case 'N':	return false;
@@ -214,8 +201,7 @@ bool entrada_estandar_seguir_recibiendo_datos(char *mensaje)
 // Función que verifica si una cadena es prefijo de otra
 // PRE: 'd' y 'q' son cadenas.
 // POST: devuelve true si 'q' es prefijo de 'd' o false en caso contrario.
-bool esPrefijo(const char *d, const char *q)
-{
+bool esPrefijo(const char *d, const char *q) {
 	int i;
 	for(i = 0; q[i] && d[i]; i++)
 		if(q[i] != d[i]) return false;
@@ -258,8 +244,7 @@ host_t* parser_host(char *buffer) {
 // está contenida.
 // PRE: 'buffer' es un string con el formato '[nombre_router],[IP]'.
 // POST: devuelve un puntero a un device que contiene la información parseada.
-device_t* parser_device(char *buffer)
-{
+device_t* parser_device(char *buffer) {
 	// Creamos un device nuevo
 	device_t *device = device_crear();
 
@@ -283,8 +268,7 @@ device_t* parser_device(char *buffer)
 // está contenida.
 // PRE: 'buffer' es un string con el formato '[router_ini]->[router_fin],peso'.
 // POST: devuelve un puntero a un route que contiene la información parseada.
-route_t* parser_route(char *buffer)
-{
+route_t* parser_route(char *buffer) {
 	// Creamos una conexión nueva
 	route_t *route = route_crear();
 
@@ -315,19 +299,16 @@ route_t* parser_route(char *buffer)
 // es el nombre del dispositivo que se desea buscar.
 // POST: si se lo encuentra, se devuelve un puntero al dispositivo.
 // En caso contrario, se devuelve NULL;
-device_t* buscar_device(lista_t *devices, char *nombre)
-{
+device_t* buscar_device(lista_t *devices, char *nombre) {
 	// Iteramos sobre la lista de dispositivos hasta encontrar
 	// el que buscamos
 	lista_iter_t* iter = lista_iter_crear(devices);
 	lista_dato_t device;
 
-	while(!lista_iter_al_final(iter))
-	{
+	while(!lista_iter_al_final(iter)) {
 		lista_iter_ver_actual(iter, &device);
 		
-		if(!strcmp(((device_t*) device)->nombre, nombre))
-		{
+		if(!strcmp(((device_t*) device)->nombre, nombre)) {
 			lista_iter_destruir(iter);
 			return (device_t*) device;
 		}
@@ -352,8 +333,7 @@ device_t* buscar_device(lista_t *devices, char *nombre)
 // NOTA: Al ser extraídos de las listas deben ser casteados a sus respectivos
 // tipos para poder ser utilizados debidamente.
 grafo_t* armar_red_archivo_de_entrada(char* archivo, lista_t *devices, 
-	lista_t *hosts)
-{
+	lista_t *hosts) {
 	// Variables para el tratamiento del archivo
 	FILE *fp;
 	char buffer[MAX_BUFFER];
@@ -370,29 +350,24 @@ grafo_t* armar_red_archivo_de_entrada(char* archivo, lista_t *devices,
 	grafo_t* grafo_red = grafo_crear();
 
 	// Procesamos linea por linea del archivo
-	while(fgets(buffer, MAX_BUFFER, fp)) 
-	{
+	while(fgets(buffer, MAX_BUFFER, fp)) {
 		// Verificamos si ha cambiado la sección
-		if(esPrefijo(buffer, S_HOST))
-		{
+		if(esPrefijo(buffer, S_HOST)) {
 			seccion = HOST;
 			continue;
 		}
-		else if(esPrefijo(buffer, S_DEVICE))
-		{
+		else if(esPrefijo(buffer, S_DEVICE)) {
 			seccion = DEVICE;
 			continue;
 		}
-		else if(esPrefijo(buffer, S_ROUTE))
-		{
+		else if(esPrefijo(buffer, S_ROUTE)) {
 			seccion = ROUTE;
 			continue;
 		}
 
 		// Si no ha cambiado la sección, procesamos de acuerdo
 		// a la sección en la que nos encontremos
-		switch(seccion)
-		{
+		switch(seccion) {
 			// Procesamos host
 			case HOST:		host = parser_host(buffer);
 							// Agregamos el host a la lista de hosts
@@ -435,8 +410,7 @@ grafo_t* armar_red_archivo_de_entrada(char* archivo, lista_t *devices,
 // 'devices' y 'hosts' respectivamete.
 // NOTA: Al ser extraídos de las listas deben ser casteados a sus respectivos
 // tipos para poder ser utilizados debidamente.
-grafo_t* armar_red_entrada_estandar(lista_t *devices, lista_t *hosts)
-{
+grafo_t* armar_red_entrada_estandar(lista_t *devices, lista_t *hosts) {
 	// Creamos el grafo de la red
 	grafo_t* grafo_red = grafo_crear();
 
@@ -447,8 +421,7 @@ grafo_t* armar_red_entrada_estandar(lista_t *devices, lista_t *hosts)
 	clrscr();
 	printf("Especificación de HOSTS\n");
 
-	while(true)
-	{
+	while(true) {
 		printf("\nIngrese un host (NOMBRE IP NOMBRE_ROUTER): ");
 		scanf("%s %s %s", nombre, ip, nombre_router);
 
@@ -470,8 +443,7 @@ grafo_t* armar_red_entrada_estandar(lista_t *devices, lista_t *hosts)
 	clrscr();
 	printf("Especificación de DEVICES\n");
 
-	while(true)
-	{
+	while(true) {
 		printf("\nIngrese un dispositivo (NOMBRE_ROUTER IP): ");
 		scanf("%s %s", nombre, ip);
 
@@ -494,8 +466,7 @@ grafo_t* armar_red_entrada_estandar(lista_t *devices, lista_t *hosts)
 	clrscr();
 	printf("Especificación de ROUTES\n");
 
-	while(true)
-	{
+	while(true) {
 		printf("\nIngrese una ruta (DISPOSITIVO_1 DISPOSITIVO_2 PESO): ");
 		scanf("%s %s %s", d1, d2, peso);
 
@@ -533,8 +504,7 @@ grafo_t* armar_red_entrada_estandar(lista_t *devices, lista_t *hosts)
 // por el que se debe pasar en cada paso del recorrido, cuyo formato es
 // [NUMERO_PASO:IP].
 void enviar_camino_salida_estandar(host_t* origen, host_t* destino,
-	lista_t *camino)
-{
+	lista_t *camino) {
 	int i = 1;
 
 	// Imprimimos sección
@@ -547,8 +517,7 @@ void enviar_camino_salida_estandar(host_t* origen, host_t* destino,
 	lista_dato_t device;
 	
 	// Procesamos cada device del camino
-	while(!lista_iter_al_final(iter))
-	{
+	while(!lista_iter_al_final(iter)) {
 		lista_iter_ver_actual(iter, &device);
 		
 		// Imprimimos el device
@@ -569,8 +538,7 @@ void enviar_camino_salida_estandar(host_t* origen, host_t* destino,
 // el caso de poseer dos caminos de igual longitud.
 // PRE: 'c1' y 'c2' son parámetros que deben haber sido creados como
 // tipo 'device_t' (se los pasa como void por ser tratado por listas)
-int criterio_de_seleccion_de_camino(lista_dato_t c1, lista_dato_t c2)
-{
+int criterio_de_seleccion_de_camino(lista_dato_t c1, lista_dato_t c2) {
 	return strcmp(((device_t*) c1)->nombre, ((device_t*) c2)->nombre);
 }
 
@@ -602,8 +570,7 @@ int criterio_de_seleccion_de_camino(lista_dato_t c1, lista_dato_t c2)
 // estrictamente necesario ingresarlos correctamente sin errores, con el
 // formato que se indicará por pantalla.
 // POST: Los resultados se envían a la salida estandar.
-void procesar_red_caminos_minimos(char *archivo)
-{
+void procesar_red_caminos_minimos(char *archivo) {
 	// Variables y punteros utilizados
 	grafo_t *grafo_devices = NULL;
 	lista_t *devices = lista_crear();
@@ -638,8 +605,7 @@ void procesar_red_caminos_minimos(char *archivo)
 	lista_iter_avanzar(iter);
 
 	// Procesamos los caminos hacia los demás hosts
-	while(!lista_iter_al_final(iter))
-	{
+	while(!lista_iter_al_final(iter)) {
 		lista_iter_ver_actual(iter, &host_destino);
 		
 		// Solicitamos el camino hacia el destino

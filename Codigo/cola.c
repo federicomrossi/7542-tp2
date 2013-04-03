@@ -19,15 +19,13 @@
  * DEFINICIÓN DE LOS TIPOS DE DATOS
  * *****************************************************************/
 
-typedef struct _nodo_cola_t
-{
+typedef struct _nodo_cola_t {
 	cola_dato_t dato;			// Datos
 	struct _nodo_cola_t* sig;	// Puntero al siguiente nodo de la lista
 } nodo_cola_t;
 
 
-struct _cola_t
-{
+struct _cola_t {
     nodo_cola_t* primero;   // Puntero al primer elemento de la cola
 	nodo_cola_t* ultimo;	// Puntero al último elemento de la cola
 };
@@ -41,8 +39,7 @@ struct _cola_t
 // Crea una cola.
 // POST: devuelve una nueva cola vacía o NULL si no se ha podido
 // llevar a cabo la creación de la misma.
-cola_t* cola_crear()
-{
+cola_t* cola_crear() {
 	// Solicitamos espacio en memoria
 	cola_t* cola = (cola_t*) malloc(sizeof(cola_t));	
 	if(! cola) return NULL;
@@ -57,18 +54,15 @@ cola_t* cola_crear()
 // Destruye la cola.
 // PRE: 'cola' es una cola existente.
 // POST: se eliminaron todos los elementos de la cola.
-void cola_destruir(cola_t *cola)
-{
+void cola_destruir(cola_t *cola) {
     nodo_cola_t *nodo_actual,*nodo;
 
 	// Si hay elementos, comenzamos la eliminación
-    if(cola->primero)
-    {
+    if(cola->primero) {
         nodo_actual = cola->primero;
         
         // Eliminación de los nodos uno a uno.
-        while(nodo_actual->sig)
-        {
+        while(nodo_actual->sig) {
             nodo = nodo_actual->sig;
             free(nodo_actual);
             nodo_actual = nodo;
@@ -83,8 +77,7 @@ void cola_destruir(cola_t *cola)
 // Verifica si una cola tiene o no elementos.
 // PRE: 'cola' es una cola existente.
 // POST: devuelve true si la cola esta vacía o false en su defecto.
-bool cola_esta_vacia(const cola_t *cola)
-{
+bool cola_esta_vacia(const cola_t *cola) {
 	return !cola->primero;
 }
 
@@ -93,8 +86,7 @@ bool cola_esta_vacia(const cola_t *cola)
 // POST: se agregó un nuevo elemento a la cola, valor se encuentra al final
 // de la cola. Devuelve true si la acción se llevo a cabo con éxito o false
 // en caso de error.
-bool cola_encolar(cola_t *cola, const cola_dato_t valor)
-{
+bool cola_encolar(cola_t *cola, const cola_dato_t valor) {
 	// Solicitamos espacio en memoria para el nuevo nodo.
 	nodo_cola_t* nodo = (nodo_cola_t*) malloc(sizeof(nodo_cola_t));
 	if(! nodo) return false;
@@ -119,8 +111,7 @@ bool cola_encolar(cola_t *cola, const cola_dato_t valor)
 // válida donde se puede escribir.
 // POST: Si la cola tiene elementos, el valor del primero se copia en *valor 
 // y devuelve true. Si está vacía devuelve false.
-bool cola_ver_primero(const cola_t *cola, cola_dato_t *valor)
-{
+bool cola_ver_primero(const cola_t *cola, cola_dato_t *valor) {
 	if (! cola->primero) return false;
 
 	*valor = cola->primero->dato;
@@ -134,8 +125,7 @@ bool cola_ver_primero(const cola_t *cola, cola_dato_t *valor)
 // POST: 'valor' contiene el valor del primer elemento anterior, la cola
 // contiene un elemento menos (si la cola no estaba vacía). Devuelve true 
 // si la acción se llevo a cabo con éxito o false en caso de error.
-bool cola_desencolar(cola_t *cola, cola_dato_t *valor)
-{
+bool cola_desencolar(cola_t *cola, cola_dato_t *valor) {
     if(!cola->primero) return false;
 	
 	// Tomamos dato del nodo y lo guardamos en valor.

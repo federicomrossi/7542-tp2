@@ -82,7 +82,6 @@
  * *****************************************************************/
 
 int main(int argc, char **argv) {
-	
 	// Toma de parámetros
 	char *archivo = NULL;
 	if(argv[1]) archivo = argv[1];
