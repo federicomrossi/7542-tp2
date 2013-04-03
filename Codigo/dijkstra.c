@@ -104,7 +104,8 @@ lista_t* dijkstra_caminos_minimos(grafo_t *grafo, lista_dato_t origen,
 	for(i = 0; i < cantidad_vertices; i++)
 	{
 		// Creamos un nodo para cada vértice
-		dijkstra_nodo_t* nodo = (dijkstra_nodo_t*) malloc(sizeof(dijkstra_nodo_t));
+		dijkstra_nodo_t* nodo = (dijkstra_nodo_t*) 
+								malloc(sizeof(dijkstra_nodo_t));
 		if(!nodo) return NULL;
 
 		// Seteamos datos iniciales del nodo
@@ -236,7 +237,8 @@ void dijkstra_destruir_resultados(lista_t* lista_resultados)
 // Al sacar los elementos de la lista deben ser casteados al tipo del dato
 // insertado en el grafo, el cual se procesó en la función generadora de 
 // resultados.
-lista_t* dijkstra_obtener_camino(lista_t* lista_resultados, lista_dato_t *destino)
+lista_t* dijkstra_obtener_camino(lista_t* lista_resultados, 
+	lista_dato_t *destino)
 {
 	// Creamos lista del camino
 	lista_t* camino = lista_crear();

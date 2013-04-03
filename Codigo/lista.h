@@ -149,7 +149,8 @@ void lista_iter_destruir(lista_iter_t *iter);
 // y perteneciente a 'lista'; 'dato' es el elemento a insertar.
 // POST: devuelve true si se realizó la acción con éxito o falso en
 // caso contrario. El iterador no modifica su posicionamiento.
-bool lista_insertar(lista_t *lista, lista_iter_t *iter, const lista_dato_t dato);
+bool lista_insertar(lista_t *lista, lista_iter_t *iter, 
+	const lista_dato_t dato);
 
 // Elimina el elemento de la lista sobre el cual se encuentra posicionado 
 // el iterador.

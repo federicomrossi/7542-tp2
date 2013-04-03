@@ -67,7 +67,8 @@ void dijkstra_destruir_resultados(lista_t* lista_resultados);
 // Al sacar los elementos de la lista deben ser casteados al tipo del dato
 // insertado en el grafo, el cual se procesó en la función generadora de 
 // resultados.
-lista_t* dijkstra_obtener_camino(lista_t* lista_resultados, lista_dato_t *destino);
+lista_t* dijkstra_obtener_camino(lista_t* lista_resultados, 
+	lista_dato_t *destino);
 
 
 #endif
