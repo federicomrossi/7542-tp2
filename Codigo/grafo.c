@@ -1,5 +1,5 @@
-/* ******************************************************************
- * ******************************************************************
+/* ****************************************************************************
+ * ****************************************************************************
  * TAD GRAFO
  * ..................................................................
  *
@@ -7,8 +7,8 @@
  * las operaciones básicas de estos. Con múltiple nos referimos a que 
  * puede ser utilizado como grafo ponderado o como grafo no ponderado.
  *
- * ******************************************************************
- * ******************************************************************/
+ * ****************************************************************************
+ * ***************************************************************************/
 
 
 #include <stdio.h>
@@ -17,18 +17,18 @@
 
 
 
-/* ******************************************************************
+/* ****************************************************************************
  * DECLARACIÓN DE LOS TIPOS DE DATOS
- * *****************************************************************/
+ * ***************************************************************************/
 
 typedef struct _arista_t arista_t;
 typedef struct _vertice_t vertice_t;
 
 
 
-/* ******************************************************************
+/* ****************************************************************************
  * INCLUSIÓN DE LIBRERIAS Y TADS EXTERNOS
- * *****************************************************************/
+ * ***************************************************************************/
 
 // TAD Lista
 #define LISTA_DATO_T
@@ -37,35 +37,35 @@ typedef arista_t* lista_dato_t;
 
 
 
-/* ******************************************************************
+/* ****************************************************************************
  * DEFINICIÓN DE LOS TIPOS DE DATOS
- * *****************************************************************/
+ * ***************************************************************************/
 
 // Tipo que representa a un grafo.
 struct _grafo_t {
-	vertice_t* primerVertice;	// Puntero al primer vértice del grafo
-	vertice_t* ultimoVertice;	// Puntero al último vértice del grafo
-	int cantidadVertices;		// Cantidad de vértices del grafo
+	vertice_t* primerVertice;			// Puntero al primer vértice del grafo
+	vertice_t* ultimoVertice;			// Puntero al último vértice del grafo
+	int cantidadVertices;				// Cantidad de vértices del grafo
 };
 
 // Tipo que representa una arista.
 struct _arista_t {
-	vertice_t* verticeAdyacente;	// Puntero al vértice adyacente
-	int peso;						// Peso de la arista
+	vertice_t* verticeAdyacente;		// Puntero al vértice adyacente
+	int peso;							// Peso de la arista
 };
 
 // Tipo que representa a un vértice del grafo.
 struct _vertice_t {
-	grafo_dato_t dato;				// Dato asociado al vértice
-	lista_t* listaDeAdyacencia;		// Lista de adyacencia del vértice
-	vertice_t* verticeSiguiente;	// Puntero al vértice siguiente
+	grafo_dato_t dato;					// Dato asociado al vértice
+	lista_t* listaDeAdyacencia;			// Lista de adyacencia del vértice
+	vertice_t* verticeSiguiente;		// Puntero al vértice siguiente
 };
 
 
 
-/* ******************************************************************
+/* ****************************************************************************
  * FUNCIONES AUXILIARES
- * *****************************************************************/
+ * ***************************************************************************/
 
 // Función que devuelve, de existir, el vértice asociado a un dato de
 // un grafo.
@@ -214,9 +214,9 @@ bool grafo_existe_vertice(grafo_t *grafo, const grafo_dato_t dato) {
 
 
 
-/* ******************************************************************
+/* ****************************************************************************
  * PRIMITIVAS DEL GRAFO
- * *****************************************************************/
+ * ***************************************************************************/
 
 // Crea un grafo.
 // POST: devuelve un nuevo grafo vacío o NULL si no se ha podido

@@ -1,8 +1,8 @@
-/* ******************************************************************
- * ******************************************************************
+/* ****************************************************************************
+ * ****************************************************************************
  * DIJKSTRA - LIBRERÍA DE FUNCIONES 
- * ******************************************************************
- * ******************************************************************
+ * ****************************************************************************
+ * ****************************************************************************
  * 
  * Librería de funciones relacionadas con el algoritmo de caminos 
  * mínimos de Dijkstra. 
@@ -15,26 +15,26 @@
 
 
 
-/* ******************************************************************
+/* ****************************************************************************
  * CONSTANTES
- * *****************************************************************/
+ * ***************************************************************************/
 
 // Entero considerado infinito utilizado para el algoritmo de Dijkstra
 const int INFINITO = 1e9;
 
 
 
-/* ******************************************************************
+/* ****************************************************************************
  * DECLARACIÓN DE LOS TIPOS DE DATOS
- * *****************************************************************/
+ * ***************************************************************************/
 
 typedef struct _dijkstra_nodo_t dijkstra_nodo_t;
 
 
 
-/* ******************************************************************
+/* ****************************************************************************
  * INCLUSIÓN DE LIBRERIAS Y TADS EXTERNOS
- * *****************************************************************/
+ * ***************************************************************************/
 
 // TAD Cola
 #define COLA_DATO_T
@@ -43,25 +43,25 @@ typedef dijkstra_nodo_t* cola_dato_t;
 
 
 
-/* ******************************************************************
+/* ****************************************************************************
  * DEFINICIÓN DE LOS TIPOS DE DATOS
- * *****************************************************************/
+ * ***************************************************************************/
 
 // Tipo que representa un nodo en el algoritmo de Dijkstra.
 struct _dijkstra_nodo_t {
-	lista_dato_t dato;				// Puntero al dato del vértice
-	dijkstra_nodo_t *nodo_previo;	// Puntero al dato del vértice 
-									// previo para llegar al vértice  
-									// actual por camino mínimo
-	int peso_camino;				// Peso mínimo del camino hasta 
-									// llegar
+	lista_dato_t dato;					// Puntero al dato del vértice
+	dijkstra_nodo_t *nodo_previo;		// Puntero al dato del vértice 
+										// previo para llegar al vértice  
+										// actual por camino mínimo
+	int peso_camino;					// Peso mínimo del camino hasta 
+										// llegar
 };
 
 
 
-/* ******************************************************************
+/* ****************************************************************************
  * FUNCIONES DE LA LIBRERÍA
- * *****************************************************************/
+ * ***************************************************************************/
 
 
 // Función que calcula los caminos mínimos de un grafo, partiendo de un
@@ -95,12 +95,12 @@ lista_t* dijkstra_caminos_minimos(grafo_t *grafo, lista_dato_t origen,
 
 
 	// Obtenemos los vértices del grafo
-	int i, cantidad_vertices = grafo_cantidad_vertices(grafo);
-	grafo_dato_t arregloDeVertices[cantidad_vertices];
+	int i, kCantidadVertices = grafo_cantidad_vertices(grafo);
+	grafo_dato_t arregloDeVertices[kCantidadVertices];
 	grafo_obtener_vertices(grafo, arregloDeVertices);
 
 	// Iteramos sobre el arreglo de vértices
-	for(i = 0; i < cantidad_vertices; i++) {
+	for(i = 0; i < kCantidadVertices; i++) {
 		// Creamos un nodo para cada vértice
 		dijkstra_nodo_t* nodo = (dijkstra_nodo_t*) 
 									malloc(sizeof(dijkstra_nodo_t));
@@ -170,7 +170,7 @@ lista_t* dijkstra_caminos_minimos(grafo_t *grafo, lista_dato_t origen,
 				continue;
 			}
 			// Caso para cuando las distancias de los nodos son iguales
-			else if(menor_peso == Vi->peso_camino) {
+			else if (menor_peso == Vi->peso_camino) {
 				// Elegimos uno de acuerdo al criterio de selección definido
 				// por el usuario
 				if(criterio_seleccion(Vi->dato, a->dato) < 0) {

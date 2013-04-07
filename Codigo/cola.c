@@ -1,12 +1,12 @@
-/* ******************************************************************
- * ******************************************************************
+/* ****************************************************************************
+ * ****************************************************************************
  * TAD COLA
  * ..................................................................
  * Implementación del TDA Cola, la cual consta de un conjunto de 
  * primitivas básicas para su uso.
  *
- * ******************************************************************
- * ******************************************************************/
+ * ****************************************************************************
+ * ****************************************************************************/
 
 
 #include <stdio.h>
@@ -15,26 +15,26 @@
 
 
 
-/* ******************************************************************
+/* ****************************************************************************
  * DEFINICIÓN DE LOS TIPOS DE DATOS
- * *****************************************************************/
+ * ***************************************************************************/
 
 typedef struct _nodo_cola_t {
-	cola_dato_t dato;			// Datos
-	struct _nodo_cola_t* sig;	// Puntero al siguiente nodo de la lista
+	cola_dato_t dato;				// Datos
+	struct _nodo_cola_t* sig;		// Puntero al siguiente nodo de la lista
 } nodo_cola_t;
 
 
 struct _cola_t {
-	nodo_cola_t* primero;	// Puntero al primer elemento de la cola
-	nodo_cola_t* ultimo;	// Puntero al último elemento de la cola
+	nodo_cola_t* primero;		// Puntero al primer elemento de la cola
+	nodo_cola_t* ultimo;		// Puntero al último elemento de la cola
 };
 
 
 
-/* ******************************************************************
+/* ****************************************************************************
  * PRIMITIVAS DE LA COLA
- * *****************************************************************/
+ * ***************************************************************************/
 
 // Crea una cola.
 // POST: devuelve una nueva cola vacía o NULL si no se ha podido
@@ -42,7 +42,7 @@ struct _cola_t {
 cola_t* cola_crear() {
 	// Solicitamos espacio en memoria
 	cola_t* cola = (cola_t*) malloc(sizeof(cola_t));
-	if(! cola) return NULL;
+	if(!cola) return NULL;
 
 	// Seteamos valores iniciales de la cola
 	cola->primero = NULL;
@@ -55,7 +55,7 @@ cola_t* cola_crear() {
 // PRE: 'cola' es una cola existente.
 // POST: se eliminaron todos los elementos de la cola.
 void cola_destruir(cola_t *cola) {
-	nodo_cola_t *nodo_actual,*nodo;
+	nodo_cola_t *nodo_actual, *nodo;
 
 	// Si hay elementos, comenzamos la eliminación
 	if(cola->primero) {
@@ -78,7 +78,7 @@ void cola_destruir(cola_t *cola) {
 // PRE: 'cola' es una cola existente.
 // POST: devuelve true si la cola esta vacía o false en su defecto.
 bool cola_esta_vacia(const cola_t *cola) {
-	return !cola->primero;
+	return (!cola->primero);
 }
 
 // Agrega un nuevo elemento a la cola.
@@ -89,7 +89,7 @@ bool cola_esta_vacia(const cola_t *cola) {
 bool cola_encolar(cola_t *cola, const cola_dato_t valor) {
 	// Solicitamos espacio en memoria para el nuevo nodo.
 	nodo_cola_t* nodo = (nodo_cola_t*) malloc(sizeof(nodo_cola_t));
-	if(! nodo) return false;
+	if(!nodo) return false;
 
 	// Guardamos valor en el nodo.
 	nodo->dato = valor;
@@ -112,7 +112,7 @@ bool cola_encolar(cola_t *cola, const cola_dato_t valor) {
 // POST: Si la cola tiene elementos, el valor del primero se copia en *valor 
 // y devuelve true. Si está vacía devuelve false.
 bool cola_ver_primero(const cola_t *cola, cola_dato_t *valor) {
-	if (! cola->primero) return false;
+	if (!cola->primero) return false;
 
 	*valor = cola->primero->dato;
 

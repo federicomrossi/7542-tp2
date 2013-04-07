@@ -1,8 +1,8 @@
-/* ******************************************************************
- * ******************************************************************
+/* ****************************************************************************
+ * ****************************************************************************
  * LIBRERÍA DE FUNCIONES PARA ROUTERS
- * ******************************************************************
- * ******************************************************************
+ * ****************************************************************************
+ * ****************************************************************************
  * 
  * Librería de funciones aplicables a las redes y a los componentes
  * que en ellas se encuentran, tales como routers, hosts, etc.
@@ -16,9 +16,9 @@
 
 
 
-/* ******************************************************************
+/* ****************************************************************************
  * CONSTANTES
- * *****************************************************************/
+ * ***************************************************************************/
 
 // Etiquetas de secciones
 const char S_HOST[] = "[host]";
@@ -33,9 +33,9 @@ enum seccion {NONE, HOST, DEVICE, ROUTE};
 
 
 
- /* ******************************************************************
+/* ****************************************************************************
  * DECLARACIÓN DE LOS TIPOS DE DATOS
- * *****************************************************************/
+ * ***************************************************************************/
 
 typedef struct _host_t host_t;
 typedef struct _device_t device_t;
@@ -43,9 +43,9 @@ typedef struct _route_t route_t;
 
 
 
-/* ******************************************************************
+/* ****************************************************************************
  * INCLUSIÓN DE LIBRERIAS Y TADS EXTERNOS
- * *****************************************************************/
+ * ***************************************************************************/
 
 // TAD Lista
 #define LISTA_DATO_T
@@ -61,36 +61,36 @@ typedef device_t* grafo_dato_t;
 
 
 
-/* ******************************************************************
+/* ****************************************************************************
  * DEFINICIÓN DE LOS TIPOS DE DATOS
- * *****************************************************************/
+ * ***************************************************************************/
 
 // Tipo que representa a un host de una red.
 struct _host_t {
-	char nombre[MAX_CHARS];				// Nombre del host
-	char ip[MAX_CHARS];					// IP del host
-	char dispositivo_nombre[MAX_CHARS];	// Nombre del dispositivo al 
-										// cual está conectado el host
+	char nombre[MAX_CHARS];						// Nombre del host
+	char ip[MAX_CHARS];							// IP del host
+	char dispositivo_nombre[MAX_CHARS];			// Nombre del dispositivo al 
+												// cual está conectado el host
 };
 
 // Tipo que representa a un dispositivo de una red.
 struct _device_t {
-	char nombre[MAX_CHARS];				// Nombre del dispositivo
-	char ip[MAX_CHARS];					// IP del dispositivo
+	char nombre[MAX_CHARS];						// Nombre del dispositivo
+	char ip[MAX_CHARS];							// IP del dispositivo
 };
 
 // Tipo que representa una ruta o conexión entre dispositivos
 struct _route_t {
-	char ini[MAX_CHARS];				// Nombre del device de partida
-	char fin[MAX_CHARS];				// Nombre del device destino
-	int peso;							// Peso asociado a la conexión
+	char ini[MAX_CHARS];						// Nombre del device de partida
+	char fin[MAX_CHARS];						// Nombre del device destino
+	int peso;									// Peso asociado a la conexión
 };
 
 
 
-/* ******************************************************************
+/* ****************************************************************************
  * FUNCIONES AUXILIARES
- * *****************************************************************/
+ * ***************************************************************************/
 
 // Crea un host.
 // POST: devuelve un host o NULL si no ha sido posible llevar a cabo
@@ -208,7 +208,6 @@ bool esPrefijo(const char *d, const char *q) {
 // PRE: 'buffer' es un string con el formato '[nombre],[IP],[nombre_router]'.
 // POST: devuelve un puntero a un host que contiene la información parseada.
 host_t* parser_host(char *buffer) {
-	
 	// Creamos un host nuevo
 	host_t *host = host_crear();
 
@@ -349,11 +348,11 @@ grafo_t* armar_red_archivo_de_entrada(char* archivo, lista_t *devices,
 			seccion = HOST;
 			continue;
 		}
-		else if(esPrefijo(buffer, S_DEVICE)) {
+		else if (esPrefijo(buffer, S_DEVICE)) {
 			seccion = DEVICE;
 			continue;
 		}
-		else if(esPrefijo(buffer, S_ROUTE)) {
+		else if (esPrefijo(buffer, S_ROUTE)) {
 			seccion = ROUTE;
 			continue;
 		}
@@ -534,9 +533,9 @@ int criterio_de_seleccion_de_camino(lista_dato_t c1, lista_dato_t c2) {
 
 
 
-/* ******************************************************************
+/* ****************************************************************************
  * FUNCIONES DE LA LIBRERIA
- * *****************************************************************/
+ * ***************************************************************************/
 
 // Función que procesa una red compuesta de hosts y dispositivos, tales
 // como routers, con el fin del encontrar el camino minimo para el envío

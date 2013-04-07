@@ -1,13 +1,13 @@
-/* ******************************************************************
- * ******************************************************************
+/* ****************************************************************************
+ * ****************************************************************************
  * TAD LISTA ENLAZADA
  * ..................................................................
  *
  * Implementación de una lista simplemente enlazada, incluyendo como 
  * primitivas a las operaciones básicas de estas.
  *
- * ******************************************************************
- * ******************************************************************/
+ * ****************************************************************************
+ * ***************************************************************************/
 
 
 #include <stdio.h>
@@ -16,35 +16,34 @@
 
 
 
-/* ******************************************************************
+/* ****************************************************************************
  * DEFINICIÓN DE LOS TIPOS DE DATOS
- * *****************************************************************/
+ * ***************************************************************************/
 
 // Tipo que representa a un nodo de la lista
 typedef struct _nodo_lista_t {
 	lista_dato_t dato;				// Dato que almacena el nodo.
 	struct _nodo_lista_t* sig;		// Puntero al nodo siguiente.
-
 } nodo_lista_t;
 
 // Tipo que representa a una lista
 struct _lista_t {
-	nodo_lista_t* primero;	// Puntero al primer elemento de la lista
-	nodo_lista_t* ultimo;	// Puntero al último elemento de la lista
-	size_t largo;			// Cantidad de elementos que tiene la lista
+	nodo_lista_t* primero;		// Puntero al primer elemento de la lista
+	nodo_lista_t* ultimo;		// Puntero al último elemento de la lista
+	size_t largo;				// Cantidad de elementos que tiene la lista
 };
 
 // Tipo que representa a un iterador de la lista 
 struct _lista_iter_t {
-	nodo_lista_t* act;		// Puntero a la posición actual del iterador
-	nodo_lista_t* ant;		// Puntero al elemento anterior del iterador
+	nodo_lista_t* act;			// Puntero a la posición actual del iterador
+	nodo_lista_t* ant;			// Puntero al elemento anterior del iterador
 };
 
 
 
-/* ******************************************************************
+/* ****************************************************************************
  * FUNCIONES AUXILIARES
- * *****************************************************************/
+ * ***************************************************************************/
 
 // Función que crea un nodo.
 // POST: se devuelve un puntero al nodo o NULL si no se ha podido 
@@ -57,9 +56,9 @@ nodo_lista_t* lista_crear_nodo() {
 
 
 
-/* ******************************************************************
+/* ****************************************************************************
  * PRIMITIVAS BÁSICAS
- * *****************************************************************/
+ * ***************************************************************************/
 
 // Crea una lista enlazada.
 // POST: Devuelve un puntero a una lista vacía o NULL si no se ha 
@@ -67,7 +66,7 @@ nodo_lista_t* lista_crear_nodo() {
 lista_t* lista_crear() {
 	// Solicitamos espacio en memoria para la lista
 	lista_t* lista = (lista_t*) malloc(sizeof(lista_t));
-	if(! lista) return NULL;
+	if(!lista) return NULL;
 
 	// Seteamos parámetros iniciales de la lista
 	lista->primero = NULL;
@@ -99,7 +98,7 @@ size_t lista_largo(const lista_t *lista) {
 bool lista_insertar_primero(lista_t *lista, const lista_dato_t dato) {
 	// Creamos un nuevo nodo
 	nodo_lista_t* nodo = lista_crear_nodo();
-	if(! nodo) return false;
+	if(!nodo) return false;
 	
 	// Seteamos los campos del nodo
 	nodo->dato = dato;
@@ -107,7 +106,7 @@ bool lista_insertar_primero(lista_t *lista, const lista_dato_t dato) {
 	lista->primero = nodo;
 	
 	// Si no hay ningún elemento, el primero también es el último
-	if(! lista->largo) lista->ultimo = nodo;
+	if(!lista->largo) lista->ultimo = nodo;
 	lista->largo++;
 	
 	return true;
@@ -121,14 +120,14 @@ bool lista_insertar_primero(lista_t *lista, const lista_dato_t dato) {
 bool lista_insertar_ultimo(lista_t *lista, const lista_dato_t dato) {
 	// Creamos un nuevo nodo
 	nodo_lista_t* nodo = lista_crear_nodo();
-	if(! nodo) return false;
+	if(!nodo) return false;
 	
 	// Seteamos los campos del nodo
 	nodo->dato = dato;
 	nodo->sig = NULL;
 	
 	// Si no hay elementos, el último también es el primero
-	if(! lista->ultimo)
+	if(!lista->ultimo)
 		lista->primero = nodo;
 	// Sino, insertamos el nuevo nodo a continuación del que 
 	// se encontraba último
@@ -219,9 +218,9 @@ void lista_destruir(lista_t *lista, void destruir_dato(lista_dato_t)) {
 
 
 
-/* ******************************************************************
+/* ****************************************************************************
  * PRIMITIVAS DE ITERACIÓN
- * *****************************************************************/
+ * ***************************************************************************/
 
 // Crea un iterador para una lista.
 // PRE: 'lista' es una lista existente;
@@ -230,7 +229,7 @@ void lista_destruir(lista_t *lista, void destruir_dato(lista_dato_t)) {
 lista_iter_t* lista_iter_crear(const lista_t* lista) {
 	// Solicitamos espacio en memoria para el iterador
 	lista_iter_t* iter = (lista_iter_t*) malloc(sizeof(lista_iter_t));
-	if(! iter) return NULL;
+	if(!iter) return NULL;
 
 	// Seteamos parámetros iniciales del iterador
 	iter->ant = NULL;
@@ -282,9 +281,9 @@ void lista_iter_destruir(lista_iter_t *iter) {
 
 
 
-/* ******************************************************************
+/* ****************************************************************************
  * PRIMITIVAS DE LA LISTA PARA EL ITERADOR
- * *****************************************************************/
+ * ***************************************************************************/
 
 // Inserta un dato en la lista a la izquierda de la posición en la que
 // se encuentra el iterador.
@@ -296,7 +295,7 @@ bool lista_insertar(lista_t *lista, lista_iter_t *iter,
 	const lista_dato_t dato) {
 	// Creamos un nuevo nodo
 	nodo_lista_t* nodo = lista_crear_nodo();
-	if(! nodo) return false;
+	if(!nodo) return false;
 	
 	// Seteamos los campos del nodo
 	nodo->dato = dato;
